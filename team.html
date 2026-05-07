@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .team-member-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .team-member-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+        }
+
+        .member-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .member-role {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+        }
+
+        .member-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .member-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            text-transform: uppercase;
+        }
+
+        .member-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .status-online {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-offline {
+            background: var(--gray-color);
+            color: white;
+        }
+
+        .status-busy {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .team-activity {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .invite-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .invite-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 1rem auto 0;
+        }
+
+        .invite-form input {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .invite-form button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html" class="active">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <div class="grid grid-cols-2">
+                <div>
+                    <h1 class="page-title">Team Collaboration</h1>
+                    <p class="page-subtitle">Work together with your team members</p>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="teamPage.openInviteModal()">
+                        <i class="fas fa-user-plus"></i> Invite Member
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Statistics -->
+        <section class="grid grid-cols-4 fade-in">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Team Members</h3>
+                    <i class="fas fa-users" style="color: var(--primary-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="team-members-count" class="text-3xl font-bold">5</h2>
+                    <p class="text-gray-500">Active members</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Online Now</h3>
+                    <i class="fas fa-circle" style="color: var(--success-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="online-members-count" class="text-3xl font-bold">3</h2>
+                    <p class="text-gray-500">Available</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Team Tasks</h3>
+                    <i class="fas fa-tasks" style="color: var(--secondary-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="team-tasks-count" class="text-3xl font-bold">24</h2>
+                    <p class="text-gray-500">Assigned tasks</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Completion Rate</h3>
+                    <i class="fas fa-chart-line" style="color: var(--success-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="team-completion-rate" class="text-3xl font-bold">87%</h2>
+                    <p class="text-gray-500">Team average</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invite Section -->
+        <section class="invite-section fade-in">
+            <h2>Grow Your Team</h2>
+            <p>Invite team members to collaborate on projects and tasks</p>
+            <div class="invite-form">
+                <input type="email" placeholder="Enter email address" id="invite-email">
+                <button onclick="teamPage.sendInvite()">Send Invite</button>
+            </div>
+        </section>
+
+        <!-- Team Members -->
+        <section class="fade-in">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Team Members</h3>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline" onclick="teamPage.filterMembers('all')">All</button>
+                        <button class="btn btn-sm btn-outline" onclick="teamPage.filterMembers('online')">Online</button>
+                        <button class="btn btn-sm btn-outline" onclick="teamPage.filterMembers('offline')">Offline</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="team-grid" class="team-grid">
+                        <!-- Team members will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Activity -->
+        <section class="team-activity fade-in">
+            <div class="card-header">
+                <h3 class="card-title">Recent Team Activity</h3>
+                <button class="btn btn-sm btn-outline" onclick="teamPage.refreshActivity()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+            <div id="team-activity">
+                <!-- Activity will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Shared Projects -->
+        <section class="card fade-in">
+            <div class="card-header">
+                <h3 class="card-title">Shared Projects</h3>
+                <a href="projects.html" class="btn btn-outline">View All Projects</a>
+            </div>
+            <div class="card-body">
+                <div id="shared-projects">
+                    <!-- Shared projects will be rendered here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Invite Member Modal -->
+    <div id="invite-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Invite Team Member</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="invite-form">
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-control form-select">
+                        <option value="member">Team Member</option>
+                        <option value="manager">Project Manager</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message (Optional)</label>
+                    <textarea name="message" class="form-control" rows="3" placeholder="Personal invitation message..."></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Invitation
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="teamPage.closeInviteModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Team page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const teamPage = {
+                teamMembers: [
+                    {
+                        id: 1,
+                        name: 'John Doe',
+                        email: 'john@example.com',
+                        role: 'Project Manager',
+                        status: 'online',
+                        avatar: 'JD',
+                        tasksCompleted: 45,
+                        tasksInProgress: 8,
+                        projects: 3
+                    },
+                    {
+                        id: 2,
+                        name: 'Jane Smith',
+                        email: 'jane@example.com',
+                        role: 'Developer',
+                        status: 'online',
+                        avatar: 'JS',
+                        tasksCompleted: 32,
+                        tasksInProgress: 5,
+                        projects: 2
+                    },
+                    {
+                        id: 3,
+                        name: 'Mike Johnson',
+                        email: 'mike@example.com',
+                        role: 'Designer',
+                        status: 'offline',
+                        avatar: 'MJ',
+                        tasksCompleted: 28,
+                        tasksInProgress: 3,
+                        projects: 2
+                    },
+                    {
+                        id: 4,
+                        name: 'Sarah Williams',
+                        email: 'sarah@example.com',
+                        role: 'Developer',
+                        status: 'busy',
+                        avatar: 'SW',
+                        tasksCompleted: 38,
+                        tasksInProgress: 7,
+                        projects: 3
+                    },
+                    {
+                        id: 5,
+                        name: 'Tom Brown',
+                        email: 'tom@example.com',
+                        role: 'QA Engineer',
+                        status: 'online',
+                        avatar: 'TB',
+                        tasksCompleted: 25,
+                        tasksInProgress: 4,
+                        projects: 2
+                    }
+                ],
+
+                teamActivities: [
+                    {
+                        id: 1,
+                        member: 'John Doe',
+                        action: 'completed task',
+                        target: 'Update project documentation',
+                        time: '2 hours ago',
+                        icon: 'fa-check-circle',
+                        color: 'success'
+                    },
+                    {
+                        id: 2,
+                        member: 'Jane Smith',
+                        action: 'started working on',
+                        target: 'New feature implementation',
+                        time: '3 hours ago',
+                        icon: 'fa-play-circle',
+                        color: 'primary'
+                    },
+                    {
+                        id: 3,
+                        member: 'Mike Johnson',
+                        action: 'commented on',
+                        target: 'Design mockups review',
+                        time: '5 hours ago',
+                        icon: 'fa-comment',
+                        color: 'secondary'
+                    },
+                    {
+                        id: 4,
+                        member: 'Sarah Williams',
+                        action: 'created new task',
+                        target: 'Bug fix for login issue',
+                        time: '6 hours ago',
+                        icon: 'fa-plus-circle',
+                        color: 'warning'
+                    }
+                ],
+
+                currentFilter: 'all',
+
+                init() {
+                    this.renderTeamMembers();
+                    this.renderTeamActivity();
+                    this.renderSharedProjects();
+                    this.updateStatistics();
+                    this.setupEventListeners();
+                },
+
+                setupEventListeners() {
+                    document.getElementById('invite-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleInviteSubmit();
+                    });
+                },
+
+                renderTeamMembers() {
+                    const container = document.getElementById('team-grid');
+                    let members = this.teamMembers;
+
+                    if (this.currentFilter !== 'all') {
+                        members = members.filter(member => member.status === this.currentFilter);
+                    }
+
+                    container.innerHTML = members.map(member => this.createMemberCard(member)).join('');
+                },
+
+                createMemberCard(member) {
+                    const statusClass = `status-${member.status}`;
+                    const statusText = member.status.charAt(0).toUpperCase() + member.status.slice(1);
+
+                    return `
+                        <div class="team-member-card">
+                            <div class="member-avatar">${member.avatar}</div>
+                            <h3 class="member-name">${member.name}</h3>
+                            <p class="member-role">${member.role}</p>
+                            <span class="member-status ${statusClass}">${statusText}</span>
+                            
+                            <div class="member-stats">
+                                <div class="member-stat">
+                                    <div class="stat-number">${member.tasksCompleted}</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                                <div class="member-stat">
+                                    <div class="stat-number">${member.tasksInProgress}</div>
+                                    <div class="stat-label">In Progress</div>
+                                </div>
+                                <div class="member-stat">
+                                    <div class="stat-number">${member.projects}</div>
+                                    <div class="stat-label">Projects</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2 justify-center">
+                                <button class="btn btn-sm btn-outline" onclick="teamPage.viewMemberProfile(${member.id})">
+                                    <i class="fas fa-user"></i> Profile
+                                </button>
+                                <button class="btn btn-sm btn-primary" onclick="teamPage.assignTask(${member.id})">
+                                    <i class="fas fa-plus"></i> Assign
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                renderTeamActivity() {
+                    const container = document.getElementById('team-activity');
+                    
+                    container.innerHTML = this.teamActivities.map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-icon" style="color: var(--${activity.color}-color);">
+                                <i class="fas ${activity.icon}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">
+                                    <strong>${activity.member}</strong> ${activity.action} <strong>${activity.target}</strong>
+                                </div>
+                                <div class="activity-time">${activity.time}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                },
+
+                renderSharedProjects() {
+                    const container = document.getElementById('shared-projects');
+                    const sharedProjects = taskManager.projects.slice(0, 3);
+
+                    container.innerHTML = `
+                        <div class="grid grid-cols-3">
+                            ${sharedProjects.map(project => {
+                                const tasks = taskManager.getTasksByProject(project.name);
+                                const completed = tasks.filter(task => task.status === 'completed').length;
+                                return `
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">${project.name}</h4>
+                                            <p class="text-gray-500 mb-2">${tasks.length} tasks</p>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar" style="width: ${(completed / (tasks.length || 1)) * 100}%; background: ${project.color};"></div>
+                                            </div>
+                                            <small class="text-gray-500">${completed} completed</small>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                },
+
+                updateStatistics() {
+                    const onlineCount = this.teamMembers.filter(m => m.status === 'online').length;
+                    const totalTasks = this.teamMembers.reduce((sum, member) => sum + member.tasksCompleted + member.tasksInProgress, 0);
+                    const avgCompletion = Math.round(
+                        this.teamMembers.reduce((sum, member) => {
+                            const total = member.tasksCompleted + member.tasksInProgress;
+                            return sum + (total > 0 ? (member.tasksCompleted / total) * 100 : 0);
+                        }, 0) / this.teamMembers.length
+                    );
+
+                    document.getElementById('team-members-count').textContent = this.teamMembers.length;
+                    document.getElementById('online-members-count').textContent = onlineCount;
+                    document.getElementById('team-tasks-count').textContent = totalTasks;
+                    document.getElementById('team-completion-rate').textContent = avgCompletion + '%';
+                },
+
+                filterMembers(filter) {
+                    this.currentFilter = filter;
+                    this.renderTeamMembers();
+                },
+
+                openInviteModal() {
+                    document.getElementById('invite-modal').classList.add('active');
+                },
+
+                closeInviteModal() {
+                    document.getElementById('invite-modal').classList.remove('active');
+                    document.getElementById('invite-form').reset();
+                },
+
+                handleInviteSubmit() {
+                    const form = document.getElementById('invite-form');
+                    const formData = new FormData(form);
+                    const email = formData.get('email');
+                    const role = formData.get('role');
+                    const message = formData.get('message');
+
+                    // Simulate sending invitation
+                    taskManager.showToast(`Invitation sent to ${email}`, 'success');
+                    this.closeInviteModal();
+
+                    // Add to recent activity
+                    this.teamActivities.unshift({
+                        id: this.teamActivities.length + 1,
+                        member: 'You',
+                        action: 'invited',
+                        target: email,
+                        time: 'Just now',
+                        icon: 'fa-user-plus',
+                        color: 'primary'
+                    });
+                    this.renderTeamActivity();
+                },
+
+                sendInvite() {
+                    const email = document.getElementById('invite-email').value;
+                    if (email) {
+                        taskManager.showToast(`Invitation sent to ${email}`, 'success');
+                        document.getElementById('invite-email').value = '';
+                    }
+                },
+
+                viewMemberProfile(memberId) {
+                    const member = this.teamMembers.find(m => m.id === memberId);
+                    if (member) {
+                        taskManager.showToast(`Viewing profile for ${member.name}`, 'success');
+                    }
+                },
+
+                assignTask(memberId) {
+                    const member = this.teamMembers.find(m => m.id === memberId);
+                    if (member) {
+                        taskManager.openModal('task-modal');
+                        taskManager.showToast(`Assigning task to ${member.name}`, 'success');
+                    }
+                },
+
+                refreshActivity() {
+                    taskManager.showToast('Activity feed refreshed', 'success');
+                    this.renderTeamActivity();
+                }
+            };
+
+            // Initialize team page
+            teamPage.init();
+
+            // Make globally available
+            window.teamPage = teamPage;
+        });
+    </script>
+</body>
+</html>

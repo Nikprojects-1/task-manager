@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .notification-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .notification-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .notification-item.unread {
+            background: var(--light-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .notification-item.info {
+            border-left-color: var(--primary-color);
+        }
+
+        .notification-item.success {
+            border-left-color: var(--success-color);
+        }
+
+        .notification-item.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .notification-item.error {
+            border-left-color: var(--danger-color);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .notification-icon.success {
+            background: #d1fae5;
+            color: var(--success-color);
+        }
+
+        .notification-icon.warning {
+            background: #fed7aa;
+            color: var(--warning-color);
+        }
+
+        .notification-icon.error {
+            background: #fee2e2;
+            color: var(--danger-color);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            color: var(--gray-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-time {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .notification-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            background: var(--light-color);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .notification-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <div class="grid grid-cols-2">
+                <div>
+                    <h1 class="page-title">Notifications</h1>
+                    <p class="page-subtitle">Stay updated with your task activities</p>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="notificationsPage.markAllAsRead()">
+                        <i class="fas fa-check-double"></i> Mark All Read
+                    </button>
+                    <button class="btn btn-outline" onclick="notificationsPage.clearAll()">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notification Statistics -->
+        <section class="notification-stats fade-in">
+            <div class="stat-card">
+                <div class="stat-value" id="total-notifications">12</div>
+                <div class="stat-label">Total Notifications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="unread-notifications">5</div>
+                <div class="stat-label">Unread</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="today-notifications">8</div>
+                <div class="stat-label">Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="week-notifications">15</div>
+                <div class="stat-label">This Week</div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="card fade-in">
+            <div class="card-body">
+                <div class="notification-filters">
+                    <button class="filter-btn active" onclick="notificationsPage.filterNotifications('all')">All</button>
+                    <button class="filter-btn" onclick="notificationsPage.filterNotifications('unread')">Unread</button>
+                    <button class="filter-btn" onclick="notificationsPage.filterNotifications('info')">Info</button>
+                    <button class="filter-btn" onclick="notificationsPage.filterNotifications('success')">Success</button>
+                    <button class="filter-btn" onclick="notificationsPage.filterNotifications('warning')">Warning</button>
+                    <button class="filter-btn" onclick="notificationsPage.filterNotifications('error')">Error</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notifications List -->
+        <section class="card fade-in">
+            <div class="card-header">
+                <h3 class="card-title">Recent Notifications</h3>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline" onclick="notificationsPage.refresh()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="notifications-list">
+                    <!-- Notifications will be rendered here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TaskFlow</h4>
+                    <p>Professional task management for individuals and teams. Stay organized, meet deadlines, and boost productivity.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                        <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="team.html"><i class="fas fa-users"></i> Team Collaboration</a></li>
+                        <li><a href="timetracking.html"><i class="fas fa-clock"></i> Time Tracking</a></li>
+                        <li><a href="tags.html"><i class="fas fa-tags"></i> Tags & Labels</a></li>
+                        <li><a href="templates.html"><i class="fas fa-copy"></i> Templates</a></li>
+                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="mailto:support@taskflow.com"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p>&copy; 2026 TaskFlow. All rights reserved.</p>
+                    <p class="footer-version">Version 2.0.1 &bull; <a href="#" style="color: var(--gray-color);">Privacy Policy</a> &bull; <a href="#" style="color: var(--gray-color);">Terms of Service</a></p>
+                </div>
+                <div class="footer-bottom-right">
+                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> by TaskFlow Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Notifications page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const notificationsPage = {
+                notifications: [
+                    {
+                        id: 1,
+                        type: 'success',
+                        title: 'Task Completed',
+                        message: 'You completed the task "Update project documentation"',
+                        time: '2 minutes ago',
+                        unread: true
+                    },
+                    {
+                        id: 2,
+                        type: 'info',
+                        title: 'New Task Assigned',
+                        message: 'John Doe assigned you to "Review code changes"',
+                        time: '1 hour ago',
+                        unread: true
+                    },
+                    {
+                        id: 3,
+                        type: 'warning',
+                        title: 'Task Due Soon',
+                        message: 'Task "Team meeting preparation" is due in 2 hours',
+                        time: '2 hours ago',
+                        unread: true
+                    },
+                    {
+                        id: 4,
+                        type: 'info',
+                        title: 'Project Update',
+                        message: 'Sarah Williams updated the "Website Redesign" project',
+                        time: '3 hours ago',
+                        unread: false
+                    },
+                    {
+                        id: 5,
+                        type: 'success',
+                        title: 'Milestone Achieved',
+                        message: 'You completed 50 tasks this month!',
+                        time: '5 hours ago',
+                        unread: false
+                    },
+                    {
+                        id: 6,
+                        type: 'error',
+                        title: 'Task Overdue',
+                        message: 'Task "Fix login bug" is now overdue',
+                        time: '6 hours ago',
+                        unread: true
+                    },
+                    {
+                        id: 7,
+                        type: 'info',
+                        title: 'Team Member Joined',
+                        message: 'Tom Brown joined your team',
+                        time: '1 day ago',
+                        unread: false
+                    },
+                    {
+                        id: 8,
+                        type: 'success',
+                        title: 'Project Completed',
+                        message: 'Project "Mobile App Development" has been completed',
+                        time: '2 days ago',
+                        unread: false
+                    }
+                ],
+
+                currentFilter: 'all',
+
+                init() {
+                    this.renderNotifications();
+                    this.updateStatistics();
+                },
+
+                renderNotifications() {
+                    const container = document.getElementById('notifications-list');
+                    let filteredNotifications = this.notifications;
+
+                    if (this.currentFilter !== 'all') {
+                        if (this.currentFilter === 'unread') {
+                            filteredNotifications = this.notifications.filter(n => n.unread);
+                        } else {
+                            filteredNotifications = this.notifications.filter(n => n.type === this.currentFilter);
+                        }
+                    }
+
+                    if (filteredNotifications.length === 0) {
+                        container.innerHTML = '<p class="text-center text-gray-500">No notifications found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = filteredNotifications.map(notification => 
+                        this.createNotificationHTML(notification)
+                    ).join('');
+                },
+
+                createNotificationHTML(notification) {
+                    return `
+                        <div class="notification-item ${notification.type} ${notification.unread ? 'unread' : ''}" data-id="${notification.id}">
+                            <div class="notification-icon ${notification.type}">
+                                <i class="fas ${this.getIconForType(notification.type)}"></i>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">${notification.title}</div>
+                                <div class="notification-message">${notification.message}</div>
+                                <div class="notification-time">${notification.time}</div>
+                            </div>
+                            <div class="notification-actions">
+                                ${notification.unread ? `
+                                    <button class="btn btn-sm btn-outline" onclick="notificationsPage.markAsRead(${notification.id})">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                ` : ''}
+                                <button class="btn btn-sm btn-outline" onclick="notificationsPage.deleteNotification(${notification.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                getIconForType(type) {
+                    const icons = {
+                        info: 'fa-info-circle',
+                        success: 'fa-check-circle',
+                        warning: 'fa-exclamation-triangle',
+                        error: 'fa-times-circle'
+                    };
+                    return icons[type] || 'fa-bell';
+                },
+
+                filterNotifications(filter) {
+                    this.currentFilter = filter;
+                    
+                    // Update button states
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+                    
+                    this.renderNotifications();
+                },
+
+                markAsRead(notificationId) {
+                    const notification = this.notifications.find(n => n.id === notificationId);
+                    if (notification) {
+                        notification.unread = false;
+                        this.renderNotifications();
+                        this.updateStatistics();
+                        taskManager.showToast('Notification marked as read', 'success');
+                    }
+                },
+
+                markAllAsRead() {
+                    this.notifications.forEach(notification => {
+                        notification.unread = false;
+                    });
+                    this.renderNotifications();
+                    this.updateStatistics();
+                    taskManager.showToast('All notifications marked as read', 'success');
+                },
+
+                deleteNotification(notificationId) {
+                    this.notifications = this.notifications.filter(n => n.id !== notificationId);
+                    this.renderNotifications();
+                    this.updateStatistics();
+                    taskManager.showToast('Notification deleted', 'success');
+                },
+
+                clearAll() {
+                    if (confirm('Are you sure you want to clear all notifications?')) {
+                        this.notifications = [];
+                        this.renderNotifications();
+                        this.updateStatistics();
+                        taskManager.showToast('All notifications cleared', 'success');
+                    }
+                },
+
+                refresh() {
+                    // Simulate refreshing notifications
+                    taskManager.showToast('Notifications refreshed', 'success');
+                    
+                    // Add a new notification for demonstration
+                    const newNotification = {
+                        id: Date.now(),
+                        type: 'info',
+                        title: 'Refresh Complete',
+                        message: 'Notifications have been refreshed',
+                        time: 'Just now',
+                        unread: true
+                    };
+                    
+                    this.notifications.unshift(newNotification);
+                    this.renderNotifications();
+                    this.updateStatistics();
+                },
+
+                updateStatistics() {
+                    const total = this.notifications.length;
+                    const unread = this.notifications.filter(n => n.unread).length;
+                    const today = this.notifications.filter(n => n.time.includes('minute') || n.time.includes('hour')).length;
+                    const week = this.notifications.length; // Simplified for demo
+
+                    document.getElementById('total-notifications').textContent = total;
+                    document.getElementById('unread-notifications').textContent = unread;
+                    document.getElementById('today-notifications').textContent = today;
+                    document.getElementById('week-notifications').textContent = week;
+                }
+            };
+
+            // Initialize notifications page
+            notificationsPage.init();
+
+            // Make globally available
+            window.notificationsPage = notificationsPage;
+        });
+    </script>
+</body>
+</html>

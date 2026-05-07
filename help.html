@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .help-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .help-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+
+        .help-nav {
+            list-style: none;
+        }
+
+        .help-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .help-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--gray-color);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .help-nav a:hover {
+            background: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .help-nav a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .help-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .help-section {
+            display: none;
+        }
+
+        .help-section.active {
+            display: block;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem;
+            background: var(--light-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--border-color);
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+
+        .guide-card {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .guide-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .guide-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .guide-description {
+            color: var(--gray-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-meta {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--light-color);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-duration {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <h1 class="page-title">Help & Support</h1>
+            <p class="page-subtitle">Find answers and get help with TaskFlow</p>
+        </section>
+
+        <div class="help-container fade-in">
+            <!-- Help Sidebar -->
+            <aside class="help-sidebar">
+                <ul class="help-nav">
+                    <li><a href="#" class="active" data-section="getting-started">
+                        <i class="fas fa-rocket"></i> Getting Started
+                    </a></li>
+                    <li><a href="#" data-section="faq">
+                        <i class="fas fa-question-circle"></i> FAQ
+                    </a></li>
+                    <li><a href="#" data-section="guides">
+                        <i class="fas fa-book"></i> User Guides
+                    </a></li>
+                    <li><a href="#" data-section="videos">
+                        <i class="fas fa-video"></i> Video Tutorials
+                    </a></li>
+                    <li><a href="#" data-section="contact">
+                        <i class="fas fa-envelope"></i> Contact Support
+                    </a></li>
+                </ul>
+            </aside>
+
+            <!-- Help Content -->
+            <div class="help-content">
+                <!-- Getting Started -->
+                <section id="getting-started" class="help-section active">
+                    <h2>Getting Started with TaskFlow</h2>
+                    <p>Welcome to TaskFlow! Here's everything you need to know to get started quickly.</p>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">1. Create Your First Task</h3>
+                        <p class="guide-description">Learn how to create and manage your first task in TaskFlow.</p>
+                        <div class="guide-meta">5 min read</div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">2. Organize with Projects</h3>
+                        <p class="guide-description">Discover how to create projects to organize your tasks effectively.</p>
+                        <div class="guide-meta">3 min read</div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">3. Using the Calendar View</h3>
+                        <p class="guide-description">Master the calendar view to visualize your tasks by date.</p>
+                        <div class="guide-meta">4 min read</div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">4. Team Collaboration</h3>
+                        <p class="guide-description">Learn how to invite team members and collaborate on projects.</p>
+                        <div class="guide-meta">6 min read</div>
+                    </div>
+                </section>
+
+                <!-- FAQ -->
+                <section id="faq" class="help-section">
+                    <h2>Frequently Asked Questions</h2>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search FAQ..." onkeyup="helpPage.searchFAQ(this.value)">
+                    </div>
+                    
+                    <div id="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="helpPage.toggleFAQ(this)">
+                                How do I create a new task?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                To create a new task, click the "Add New Task" button on any page, fill in the task details including title, description, priority, and due date, then click "Save Task". You can also quickly add tasks from the dashboard using the Quick Add button.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="helpPage.toggleFAQ(this)">
+                                Can I collaborate with team members?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Yes! TaskFlow supports team collaboration. You can invite team members from the Team page, assign tasks to specific members, share projects, and track team progress through the analytics dashboard.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="helpPage.toggleFAQ(this)">
+                                How do I export my data?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                You can export your data from the Settings page under "Data & Storage". Click the "Export" button to download all your tasks, projects, and settings as a JSON file. You can also export from your Profile page.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="helpPage.toggleFAQ(this)">
+                                Is my data secure?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Absolutely! Your data is stored locally in your browser and is never transmitted to external servers without your explicit consent. We use industry-standard encryption for any data transmission.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="helpPage.toggleFAQ(this)">
+                                Can I customize the appearance?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                Yes! You can customize the theme, colors, and layout from the Settings page under "Appearance". Choose from light, dark, or auto themes, and enable compact mode if preferred.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- User Guides -->
+                <section id="guides" class="help-section">
+                    <h2>User Guides</h2>
+                    <p>Comprehensive guides to help you master TaskFlow features.</p>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">Complete Task Management Guide</h3>
+                        <p class="guide-description">A comprehensive guide covering all aspects of task management in TaskFlow, from creation to completion.</p>
+                        <div class="guide-meta">15 min read • Beginner</div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">Project Management Best Practices</h3>
+                        <p class="guide-description">Learn how to effectively organize and manage projects using TaskFlow's project features.</p>
+                        <div class="guide-meta">10 min read • Intermediate</div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">Team Collaboration Handbook</h3>
+                        <p class="guide-description">Everything you need to know about collaborating with your team in TaskFlow.</p>
+                        <div class="guide-meta">12 min read • Intermediate</div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <h3 class="guide-title">Analytics and Reporting</h3>
+                        <p class="guide-description">How to use TaskFlow's analytics features to track productivity and generate reports.</p>
+                        <div class="guide-meta">8 min read • Advanced</div>
+                    </div>
+                </section>
+
+                <!-- Video Tutorials -->
+                <section id="videos" class="help-section">
+                    <h2>Video Tutorials</h2>
+                    <p>Watch step-by-step video tutorials to learn TaskFlow features.</p>
+                    
+                    <div class="video-grid">
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">Getting Started</h3>
+                                <p class="video-duration">5:30</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">Creating Tasks</h3>
+                                <p class="video-duration">3:45</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">Managing Projects</h3>
+                                <p class="video-duration">7:20</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <h3 class="video-title">Team Features</h3>
+                                <p class="video-duration">6:15</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Support -->
+                <section id="contact" class="help-section">
+                    <h2>Contact Support</h2>
+                    <p>Can't find what you're looking for? Our support team is here to help!</p>
+                    
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email Support</h3>
+                            <p>support@taskflow.com</p>
+                            <p>Get help via email within 24 hours</p>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3>Live Chat</h3>
+                            <p>Available Mon-Fri, 9AM-6PM</p>
+                            <p>Get instant help from our team</p>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h3>Knowledge Base</h3>
+                            <p>Extensive documentation</p>
+                            <p>Self-service help articles</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3>Send us a Message</h3>
+                        </div>
+                        <div class="card-body">
+                            <form onsubmit="helpPage.submitSupportRequest(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Subject</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Message</label>
+                                    <textarea class="form-control" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TaskFlow</h4>
+                    <p>Professional task management for individuals and teams. Stay organized, meet deadlines, and boost productivity.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                        <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="team.html"><i class="fas fa-users"></i> Team Collaboration</a></li>
+                        <li><a href="timetracking.html"><i class="fas fa-clock"></i> Time Tracking</a></li>
+                        <li><a href="tags.html"><i class="fas fa-tags"></i> Tags & Labels</a></li>
+                        <li><a href="templates.html"><i class="fas fa-copy"></i> Templates</a></li>
+                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="mailto:support@taskflow.com"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p>&copy; 2026 TaskFlow. All rights reserved.</p>
+                    <p class="footer-version">Version 2.0.1 &bull; <a href="#" style="color: var(--gray-color);">Privacy Policy</a> &bull; <a href="#" style="color: var(--gray-color);">Terms of Service</a></p>
+                </div>
+                <div class="footer-bottom-right">
+                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> by TaskFlow Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Help page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const helpPage = {
+                currentSection: 'getting-started',
+
+                init() {
+                    this.setupEventListeners();
+                },
+
+                setupEventListeners() {
+                    // Navigation
+                    document.querySelectorAll('.help-nav a').forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const section = e.target.dataset.section;
+                            this.switchSection(section);
+                        });
+                    });
+                },
+
+                switchSection(sectionId) {
+                    // Update navigation
+                    document.querySelectorAll('.help-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+                    // Update content
+                    document.querySelectorAll('.help-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(sectionId).classList.add('active');
+
+                    this.currentSection = sectionId;
+                },
+
+                toggleFAQ(element) {
+                    const faqItem = element.parentElement;
+                    faqItem.classList.toggle('active');
+                },
+
+                searchFAQ(query) {
+                    const faqItems = document.querySelectorAll('.faq-item');
+                    
+                    if (query === '') {
+                        faqItems.forEach(item => {
+                            item.style.display = 'block';
+                        });
+                        return;
+                    }
+                    
+                    faqItems.forEach(item => {
+                        const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                        
+                        if (question.includes(query.toLowerCase()) || answer.includes(query.toLowerCase())) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                },
+
+                submitSupportRequest(event) {
+                    event.preventDefault();
+                    taskManager.showToast('Support request sent successfully! We\'ll get back to you soon.', 'success');
+                    event.target.reset();
+                }
+            };
+
+            // Initialize help page
+            helpPage.init();
+
+            // Make globally available
+            window.helpPage = helpPage;
+        });
+    </script>
+</body>
+</html>

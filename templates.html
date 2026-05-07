@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .template-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .template-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-popular {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .badge-new {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .template-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .template-description {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .template-tasks {
+            margin-bottom: 1rem;
+        }
+
+        .template-task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .template-task-item:last-child {
+            border-bottom: none;
+        }
+
+        .template-task-item i {
+            color: var(--primary-color);
+        }
+
+        .template-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-btn:hover {
+            background: var(--light-color);
+        }
+
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .create-template-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .create-template-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .create-template-form input,
+        .create-template-form textarea,
+        .create-template-form select {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .template-preview {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .task-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-input-group input {
+            flex: 1;
+        }
+
+        .remove-task-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+                    <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <div class="grid grid-cols-2">
+                <div>
+                    <h1 class="page-title">Task Templates</h1>
+                    <p class="page-subtitle">Save time with pre-built task templates</p>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="templatesPage.openCreateModal()">
+                        <i class="fas fa-plus"></i> Create Template
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Template Section -->
+        <section class="create-template-section fade-in">
+            <h2>Create Custom Template</h2>
+            <p>Build your own task templates for recurring projects and workflows</p>
+            <button class="btn btn-outline" style="background: white; color: var(--primary-color);" onclick="templatesPage.openCreateModal()">
+                <i class="fas fa-magic"></i> Create Template
+            </button>
+        </section>
+
+        <!-- Category Filters -->
+        <section class="card fade-in">
+            <div class="card-body">
+                <div class="category-filters">
+                    <button class="category-btn active" onclick="templatesPage.filterByCategory('all')">All Templates</button>
+                    <button class="category-btn" onclick="templatesPage.filterByCategory('project')">Project Management</button>
+                    <button class="category-btn" onclick="templatesPage.filterByCategory('development')">Development</button>
+                    <button class="category-btn" onclick="templatesPage.filterByCategory('marketing')">Marketing</button>
+                    <button class="category-btn" onclick="templatesPage.filterByCategory('personal')">Personal</button>
+                    <button class="category-btn" onclick="templatesPage.filterByCategory('business')">Business</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Templates Grid -->
+        <section class="templates-grid fade-in">
+            <div class="template-card" data-category="project">
+                <div class="template-header">
+                    <div class="template-icon" style="background: var(--primary-color);">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <span class="template-badge badge-popular">Popular</span>
+                </div>
+                <h3 class="template-title">Project Launch</h3>
+                <p class="template-description">Complete template for launching a new project from planning to execution.</p>
+                <div class="template-tasks">
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Define project scope</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Create project timeline</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Assign team roles</span>
+                    </div>
+                </div>
+                <div class="template-meta">
+                    <span><i class="fas fa-tasks"></i> 12 tasks</span>
+                    <span><i class="fas fa-clock"></i> 2 weeks</span>
+                </div>
+                <div class="template-actions">
+                    <button class="btn btn-primary btn-sm" onclick="templatesPage.useTemplate(1)">Use Template</button>
+                    <button class="btn btn-outline btn-sm" onclick="templatesPage.viewTemplate(1)">Preview</button>
+                </div>
+            </div>
+
+            <div class="template-card" data-category="development">
+                <div class="template-header">
+                    <div class="template-icon" style="background: var(--secondary-color);">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span class="template-badge badge-new">New</span>
+                </div>
+                <h3 class="template-title">Sprint Planning</h3>
+                <p class="template-description">Agile sprint planning template for development teams.</p>
+                <div class="template-tasks">
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Review backlog items</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Estimate story points</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Assign sprint tasks</span>
+                    </div>
+                </div>
+                <div class="template-meta">
+                    <span><i class="fas fa-tasks"></i> 8 tasks</span>
+                    <span><i class="fas fa-clock"></i> 1 week</span>
+                </div>
+                <div class="template-actions">
+                    <button class="btn btn-primary btn-sm" onclick="templatesPage.useTemplate(2)">Use Template</button>
+                    <button class="btn btn-outline btn-sm" onclick="templatesPage.viewTemplate(2)">Preview</button>
+                </div>
+            </div>
+
+            <div class="template-card" data-category="marketing">
+                <div class="template-header">
+                    <div class="template-icon" style="background: var(--success-color);">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                </div>
+                <h3 class="template-title">Campaign Launch</h3>
+                <p class="template-description">Marketing campaign template from strategy to execution.</p>
+                <div class="template-tasks">
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Define target audience</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Create content calendar</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Set up analytics</span>
+                    </div>
+                </div>
+                <div class="template-meta">
+                    <span><i class="fas fa-tasks"></i> 15 tasks</span>
+                    <span><i class="fas fa-clock"></i> 3 weeks</span>
+                </div>
+                <div class="template-actions">
+                    <button class="btn btn-primary btn-sm" onclick="templatesPage.useTemplate(3)">Use Template</button>
+                    <button class="btn btn-outline btn-sm" onclick="templatesPage.viewTemplate(3)">Preview</button>
+                </div>
+            </div>
+
+            <div class="template-card" data-category="personal">
+                <div class="template-header">
+                    <div class="template-icon" style="background: var(--warning-color);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="template-badge badge-popular">Popular</span>
+                </div>
+                <h3 class="template-title">Weekly Planning</h3>
+                <p class="template-description">Personal weekly planning template for productivity.</p>
+                <div class="template-tasks">
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Review last week</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Set weekly goals</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Schedule important tasks</span>
+                    </div>
+                </div>
+                <div class="template-meta">
+                    <span><i class="fas fa-tasks"></i> 7 tasks</span>
+                    <span><i class="fas fa-clock"></i> 1 week</span>
+                </div>
+                <div class="template-actions">
+                    <button class="btn btn-primary btn-sm" onclick="templatesPage.useTemplate(4)">Use Template</button>
+                    <button class="btn btn-outline btn-sm" onclick="templatesPage.viewTemplate(4)">Preview</button>
+                </div>
+            </div>
+
+            <div class="template-card" data-category="business">
+                <div class="template-header">
+                    <div class="template-icon" style="background: var(--danger-color);">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                </div>
+                <h3 class="template-title">Quarterly Review</h3>
+                <p class="template-description">Business quarterly review and planning template.</p>
+                <div class="template-tasks">
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Analyze Q3 results</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Set Q4 objectives</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Update budget</span>
+                    </div>
+                </div>
+                <div class="template-meta">
+                    <span><i class="fas fa-tasks"></i> 10 tasks</span>
+                    <span><i class="fas fa-clock"></i> 2 weeks</span>
+                </div>
+                <div class="template-actions">
+                    <button class="btn btn-primary btn-sm" onclick="templatesPage.useTemplate(5)">Use Template</button>
+                    <button class="btn btn-outline btn-sm" onclick="templatesPage.viewTemplate(5)">Preview</button>
+                </div>
+            </div>
+
+            <div class="template-card" data-category="development">
+                <div class="template-header">
+                    <div class="template-icon" style="background: #8b5cf6;">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                </div>
+                <h3 class="template-title">Bug Tracking</h3>
+                <p class="template-description">Software bug tracking and resolution workflow.</p>
+                <div class="template-tasks">
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Log bug report</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Reproduce issue</span>
+                    </div>
+                    <div class="template-task-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Test fix</span>
+                    </div>
+                </div>
+                <div class="template-meta">
+                    <span><i class="fas fa-tasks"></i> 6 tasks</span>
+                    <span><i class="fas fa-clock"></i> 3 days</span>
+                </div>
+                <div class="template-actions">
+                    <button class="btn btn-primary btn-sm" onclick="templatesPage.useTemplate(6)">Use Template</button>
+                    <button class="btn btn-outline btn-sm" onclick="templatesPage.viewTemplate(6)">Preview</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Template Modal -->
+    <div id="create-template-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Template</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="template-form">
+                <div class="form-group">
+                    <label class="form-label">Template Name *</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-control form-select">
+                            <option value="project">Project Management</option>
+                            <option value="development">Development</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="personal">Personal</option>
+                            <option value="business">Business</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <input type="color" name="color" class="form-control" value="#4f46e5">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tasks</label>
+                    <div id="template-tasks-container">
+                        <div class="task-input-group">
+                            <input type="text" placeholder="Enter task title" class="form-control">
+                            <button type="button" class="remove-task-btn" onclick="templatesPage.removeTask(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="templatesPage.addTaskInput()">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Template
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="templatesPage.closeCreateModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Templates page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const templatesPage = {
+                currentCategory: 'all',
+
+                init() {
+                    this.setupEventListeners();
+                },
+
+                setupEventListeners() {
+                    document.getElementById('template-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleTemplateSubmit();
+                    });
+                },
+
+                filterByCategory(category) {
+                    this.currentCategory = category;
+                    
+                    // Update button states
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+
+                    // Filter templates
+                    const templates = document.querySelectorAll('.template-card');
+                    templates.forEach(template => {
+                        if (category === 'all' || template.dataset.category === category) {
+                            template.style.display = 'block';
+                        } else {
+                            template.style.display = 'none';
+                        }
+                    });
+                },
+
+                openCreateModal() {
+                    document.getElementById('create-template-modal').classList.add('active');
+                },
+
+                closeCreateModal() {
+                    document.getElementById('create-template-modal').classList.remove('active');
+                    document.getElementById('template-form').reset();
+                    // Reset to single task input
+                    document.getElementById('template-tasks-container').innerHTML = `
+                        <div class="task-input-group">
+                            <input type="text" placeholder="Enter task title" class="form-control">
+                            <button type="button" class="remove-task-btn" onclick="templatesPage.removeTask(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                },
+
+                addTaskInput() {
+                    const container = document.getElementById('template-tasks-container');
+                    const taskInput = document.createElement('div');
+                    taskInput.className = 'task-input-group';
+                    taskInput.innerHTML = `
+                        <input type="text" placeholder="Enter task title" class="form-control">
+                        <button type="button" class="remove-task-btn" onclick="templatesPage.removeTask(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    container.appendChild(taskInput);
+                },
+
+                removeTask(button) {
+                    const container = document.getElementById('template-tasks-container');
+                    if (container.children.length > 1) {
+                        button.parentElement.remove();
+                    }
+                },
+
+                handleTemplateSubmit() {
+                    const form = document.getElementById('template-form');
+                    const formData = new FormData(form);
+                    
+                    const taskInputs = document.querySelectorAll('#template-tasks-container input');
+                    const tasks = Array.from(taskInputs)
+                        .map(input => input.value.trim())
+                        .filter(value => value !== '');
+
+                    const templateData = {
+                        name: formData.get('name'),
+                        description: formData.get('description'),
+                        category: formData.get('category'),
+                        color: formData.get('color'),
+                        tasks: tasks,
+                        createdAt: new Date().toISOString()
+                    };
+
+                    // Save template to localStorage
+                    const templates = JSON.parse(localStorage.getItem('templates') || '[]');
+                    templates.push(templateData);
+                    localStorage.setItem('templates', JSON.stringify(templates));
+
+                    taskManager.showToast('Template created successfully!', 'success');
+                    this.closeCreateModal();
+                },
+
+                useTemplate(templateId) {
+                    taskManager.showToast('Template applied successfully! Tasks have been created.', 'success');
+                    
+                    // In a real app, this would create tasks from the template
+                    setTimeout(() => {
+                        window.location.href = 'tasks.html';
+                    }, 1500);
+                },
+
+                viewTemplate(templateId) {
+                    taskManager.showToast('Template preview feature coming soon!', 'info');
+                }
+            };
+
+            // Initialize templates page
+            templatesPage.init();
+
+            // Make globally available
+            window.templatesPage = templatesPage;
+        });
+    </script>
+</body>
+</html>

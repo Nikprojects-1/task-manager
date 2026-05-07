@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <div class="grid grid-cols-2">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Overview of your tasks and productivity</p>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="taskManager.openModal('task-modal')">
+                        <i class="fas fa-plus"></i> Quick Add Task
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Cards -->
+        <section class="grid grid-cols-4 fade-in">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Total Tasks</h3>
+                    <i class="fas fa-tasks" style="color: var(--primary-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="total-tasks" class="text-3xl font-bold">0</h2>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                    </div>
+                    <p class="text-gray-500">All tasks</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Completed</h3>
+                    <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="completed-tasks" class="text-3xl font-bold">0</h2>
+                    <div class="progress">
+                        <div class="progress-bar" style="background: var(--success-color); width: 0%;" id="completed-progress"></div>
+                    </div>
+                    <p class="text-gray-500" id="completed-percentage">0% completion</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">In Progress</h3>
+                    <i class="fas fa-spinner" style="color: var(--warning-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="in-progress-tasks" class="text-3xl font-bold">0</h2>
+                    <div class="progress">
+                        <div class="progress-bar" style="background: var(--warning-color); width: 0%;" id="progress-progress"></div>
+                    </div>
+                    <p class="text-gray-500">Active tasks</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Today's Tasks</h3>
+                    <i class="fas fa-calendar-day" style="color: var(--secondary-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="today-tasks" class="text-3xl font-bold">0</h2>
+                    <div class="progress">
+                        <div class="progress-bar" style="background: var(--secondary-color); width: 0%;" id="today-progress"></div>
+                    </div>
+                    <p class="text-gray-500">Due today</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts and Lists -->
+        <section class="grid grid-cols-3 fade-in">
+            <!-- Priority Distribution -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Priority Distribution</h3>
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="card-body">
+                    <div id="priority-chart">
+                        <div class="priority-item">
+                            <span class="priority-label">High</span>
+                            <span class="priority-count" id="high-priority-count">0</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="background: var(--danger-color);" id="high-priority-bar"></div>
+                            </div>
+                        </div>
+                        <div class="priority-item">
+                            <span class="priority-label">Medium</span>
+                            <span class="priority-count" id="medium-priority-count">0</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="background: var(--warning-color);" id="medium-priority-bar"></div>
+                            </div>
+                        </div>
+                        <div class="priority-item">
+                            <span class="priority-label">Low</span>
+                            <span class="priority-count" id="low-priority-count">0</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="background: var(--success-color);" id="low-priority-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Activity</h3>
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="card-body">
+                    <div id="recent-activity">
+                        <div class="activity-item">
+                            <i class="fas fa-plus-circle" style="color: var(--primary-color);"></i>
+                            <div>
+                                <p class="activity-text">New task created</p>
+                                <p class="activity-time">Just now</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                            <div>
+                                <p class="activity-text">Task completed</p>
+                                <p class="activity-time">2 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-edit" style="color: var(--warning-color);"></i>
+                            <div>
+                                <p class="activity-text">Task updated</p>
+                                <p class="activity-time">5 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Upcoming Deadlines</h3>
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-body">
+                    <div id="upcoming-deadlines">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Lists -->
+        <section class="grid grid-cols-2 fade-in">
+            <!-- Today's Tasks -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Today's Tasks</h3>
+                    <a href="tasks.html?filter=today" class="btn btn-sm btn-outline">View All</a>
+                </div>
+                <div class="card-body">
+                    <div id="today-tasks-list">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overdue Tasks -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Overdue Tasks</h3>
+                    <a href="tasks.html?filter=overdue" class="btn btn-sm btn-danger">View All</a>
+                </div>
+                <div class="card-body">
+                    <div id="overdue-tasks-list">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Overview -->
+        <section class="card fade-in">
+            <div class="card-header">
+                <h3 class="card-title">Project Overview</h3>
+                <a href="projects.html" class="btn btn-outline">Manage Projects</a>
+            </div>
+            <div class="card-body">
+                <div id="project-overview">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Task Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Quick Add Task</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select name="priority" class="form-control form-select">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Date</label>
+                        <input type="date" name="dueDate" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Project</label>
+                    <select name="project" id="project" class="form-control form-select">
+                        <!-- Projects will be populated here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                    <button type="button" class="btn btn-outline" onclick="taskManager.closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TaskFlow</h4>
+                    <p>Professional task management for individuals and teams. Stay organized, meet deadlines, and boost productivity.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                        <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="team.html"><i class="fas fa-users"></i> Team Collaboration</a></li>
+                        <li><a href="timetracking.html"><i class="fas fa-clock"></i> Time Tracking</a></li>
+                        <li><a href="tags.html"><i class="fas fa-tags"></i> Tags & Labels</a></li>
+                        <li><a href="templates.html"><i class="fas fa-copy"></i> Templates</a></li>
+                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="mailto:support@taskflow.com"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p>&copy; 2026 TaskFlow. All rights reserved.</p>
+                    <p class="footer-version">Version 2.0.1 &bull; <a href="#" style="color: var(--gray-color);">Privacy Policy</a> &bull; <a href="#" style="color: var(--gray-color);">Terms of Service</a></p>
+                </div>
+                <div class="footer-bottom-right">
+                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> by TaskFlow Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api-client.js"></script>
+    <script src="script-backend-integrated.js"></script>
+    <script>
+        // Dashboard specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const dashboard = {
+                updateDashboard() {
+                    this.updateStats();
+                    this.updatePriorityChart();
+                    this.updateUpcomingDeadlines();
+                    this.updateTodayTasks();
+                    this.updateOverdueTasks();
+                    this.updateProjectOverview();
+                },
+
+                updateStats() {
+                    const stats = taskManager.updateStats();
+                    const total = stats.total || 1;
+                    
+                    // Update progress bars
+                    document.getElementById('completed-progress').style.width = `${(stats.completed / total) * 100}%`;
+                    document.getElementById('progress-progress').style.width = `${(stats.inProgress / total) * 100}%`;
+                    document.getElementById('today-progress').style.width = `${(stats.today / total) * 100}%`;
+                    
+                    // Update percentage
+                    document.getElementById('completed-percentage').textContent = `${Math.round((stats.completed / total) * 100)}% completion`;
+                },
+
+                updatePriorityChart() {
+                    const priorities = ['high', 'medium', 'low'];
+                    const total = taskManager.tasks.length || 1;
+                    
+                    priorities.forEach(priority => {
+                        const count = taskManager.tasks.filter(task => task.priority === priority).length;
+                        const element = document.getElementById(`${priority}-priority-count`);
+                        const bar = document.getElementById(`${priority}-priority-bar`);
+                        
+                        if (element) element.textContent = count;
+                        if (bar) bar.style.width = `${(count / total) * 100}%`;
+                    });
+                },
+
+                updateUpcomingDeadlines() {
+                    const container = document.getElementById('upcoming-deadlines');
+                    const today = new Date();
+                    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+                    
+                    const upcomingTasks = taskManager.tasks
+                        .filter(task => {
+                            const dueDate = new Date(task.dueDate);
+                            return dueDate >= today && dueDate <= nextWeek && task.status !== 'completed';
+                        })
+                        .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                        .slice(0, 5);
+
+                    if (upcomingTasks.length === 0) {
+                        container.innerHTML = '<p class="text-center text-gray-500">No upcoming deadlines</p>';
+                    } else {
+                        container.innerHTML = upcomingTasks.map(task => `
+                            <div class="deadline-item">
+                                <div class="deadline-info">
+                                    <p class="deadline-title">${task.title}</p>
+                                    <p class="deadline-date">Due: ${task.dueDate}</p>
+                                </div>
+                                <span class="badge badge-${task.priority}">${task.priority}</span>
+                            </div>
+                        `).join('');
+                    }
+                },
+
+                updateTodayTasks() {
+                    const container = document.getElementById('today-tasks-list');
+                    const today = new Date().toISOString().split('T')[0];
+                    const todayTasks = taskManager.tasks.filter(task => task.dueDate === today);
+                    
+                    if (todayTasks.length === 0) {
+                        container.innerHTML = '<p class="text-center text-gray-500">No tasks for today</p>';
+                    } else {
+                        container.innerHTML = todayTasks.map(task => taskManager.createTaskHTML(task)).join('');
+                        taskManager.attachTaskEventListeners();
+                    }
+                },
+
+                updateOverdueTasks() {
+                    const container = document.getElementById('overdue-tasks-list');
+                    const today = new Date().toISOString().split('T')[0];
+                    const overdueTasks = taskManager.tasks.filter(task => 
+                        task.dueDate < today && task.status !== 'completed'
+                    );
+                    
+                    if (overdueTasks.length === 0) {
+                        container.innerHTML = '<p class="text-center text-gray-500">No overdue tasks</p>';
+                    } else {
+                        container.innerHTML = overdueTasks.map(task => taskManager.createTaskHTML(task)).join('');
+                        taskManager.attachTaskEventListeners();
+                    }
+                },
+
+                updateProjectOverview() {
+                    const container = document.getElementById('project-overview');
+                    const projectStats = taskManager.projects.map(project => {
+                        const tasks = taskManager.getTasksByProject(project.name);
+                        const completed = tasks.filter(task => task.status === 'completed').length;
+                        return {
+                            ...project,
+                            total: tasks.length,
+                            completed: completed,
+                            percentage: tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0
+                        };
+                    });
+
+                    container.innerHTML = `
+                        <div class="grid grid-cols-4">
+                            ${projectStats.map(project => `
+                                <div class="project-card">
+                                    <div class="project-header">
+                                        <h4 class="project-name">${project.name}</h4>
+                                        <span class="project-count">${project.total} tasks</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: ${project.percentage}%; background: ${project.color};"></div>
+                                    </div>
+                                    <p class="project-percentage">${project.percentage}% complete</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            };
+
+            // Override the initializeDashboard method
+            taskManager.initializeDashboard = () => {
+                dashboard.updateDashboard();
+            };
+
+            // Initialize dashboard
+            dashboard.updateDashboard();
+        });
+    </script>
+</body>
+</html>

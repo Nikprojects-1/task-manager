@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .settings-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .settings-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+
+        .settings-nav {
+            list-style: none;
+        }
+
+        .settings-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .settings-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--gray-color);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .settings-nav a:hover {
+            background: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .settings-nav a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            color: var(--gray-color);
+        }
+
+        .setting-group {
+            margin-bottom: 2rem;
+        }
+
+        .setting-group-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .setting-description {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: var(--gray-color);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .theme-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+
+        .theme-option.selected {
+            border-color: var(--primary-color);
+        }
+
+        .theme-light {
+            background: linear-gradient(135deg, #ffffff 50%, #f3f4f6 50%);
+        }
+
+        .theme-dark {
+            background: linear-gradient(135deg, #1f2937 50%, #111827 50%);
+        }
+
+        .theme-auto {
+            background: linear-gradient(135deg, #ffffff 25%, #f3f4f6 25%, #1f2937 75%, #111827 75%);
+        }
+
+        .danger-zone {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .danger-zone h4 {
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-sidebar {
+                order: 2;
+            }
+            
+            .settings-content {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html" class="active">Settings</a></li>
+            </ul>
+            <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Manage your preferences and account settings</p>
+        </section>
+
+        <div class="settings-container fade-in">
+            <!-- Settings Sidebar -->
+            <aside class="settings-sidebar">
+                <ul class="settings-nav">
+                    <li><a href="#" class="active" data-section="general">
+                        <i class="fas fa-cog"></i> General
+                    </a></li>
+                    <li><a href="#" data-section="notifications">
+                        <i class="fas fa-bell"></i> Notifications
+                    </a></li>
+                    <li><a href="#" data-section="appearance">
+                        <i class="fas fa-palette"></i> Appearance
+                    </a></li>
+                    <li><a href="#" data-section="privacy">
+                        <i class="fas fa-lock"></i> Privacy
+                    </a></li>
+                    <li><a href="#" data-section="data">
+                        <i class="fas fa-database"></i> Data & Storage
+                    </a></li>
+                    <li><a href="#" data-section="account">
+                        <i class="fas fa-user"></i> Account
+                    </a></li>
+                </ul>
+            </aside>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- General Settings -->
+                <section id="general" class="settings-section active">
+                    <div class="section-header">
+                        <h2 class="section-title">General Settings</h2>
+                        <p class="section-description">Configure basic application settings</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Task Management</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Default Priority</div>
+                                <div class="setting-description">Set the default priority for new tasks</div>
+                            </div>
+                            <select class="form-control form-select" style="width: 150px;">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Default Project</div>
+                                <div class="setting-description">Set the default project for new tasks</div>
+                            </div>
+                            <select class="form-control form-select" style="width: 150px;">
+                                <option value="Work" selected>Work</option>
+                                <option value="Personal">Personal</option>
+                                <option value="Development">Development</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Auto-save</div>
+                                <div class="setting-description">Automatically save changes as you work</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Date & Time</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Date Format</div>
+                                <div class="setting-description">Choose your preferred date format</div>
+                            </div>
+                            <select class="form-control form-select" style="width: 150px;">
+                                <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Time Zone</div>
+                                <div class="setting-description">Set your local time zone</div>
+                            </div>
+                            <select class="form-control form-select" style="width: 200px;">
+                                <option value="UTC">UTC</option>
+                                <option value="EST" selected>Eastern Time (EST)</option>
+                                <option value="PST">Pacific Time (PST)</option>
+                                <option value="GMT">Greenwich Mean Time (GMT)</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notifications Settings -->
+                <section id="notifications" class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Notifications</h2>
+                        <p class="section-description">Manage your notification preferences</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Email Notifications</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Task Reminders</div>
+                                <div class="setting-description">Receive email reminders for upcoming tasks</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Daily Summary</div>
+                                <div class="setting-description">Get a daily summary of your tasks</div>
+                            </div>
+                            <div class="toggle-switch" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Team Updates</div>
+                                <div class="setting-description">Notifications about team activities</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Browser Notifications</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Desktop Notifications</div>
+                                <div class="setting-description">Show browser notifications for important updates</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Sound Alerts</div>
+                                <div class="setting-description">Play sound for notifications</div>
+                            </div>
+                            <div class="toggle-switch" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Appearance Settings -->
+                <section id="appearance" class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Appearance</h2>
+                        <p class="section-description">Customize the look and feel</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Theme</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Choose Theme</div>
+                                <div class="setting-description">Select your preferred color theme</div>
+                            </div>
+                            <div class="theme-selector">
+                                <div class="theme-option theme-light selected" onclick="settingsPage.selectTheme(this, 'light')"></div>
+                                <div class="theme-option theme-dark" onclick="settingsPage.selectTheme(this, 'dark')"></div>
+                                <div class="theme-option theme-auto" onclick="settingsPage.selectTheme(this, 'auto')"></div>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Compact Mode</div>
+                                <div class="setting-description">Use a more compact interface layout</div>
+                            </div>
+                            <div class="toggle-switch" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Animations</div>
+                                <div class="setting-description">Enable interface animations and transitions</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Privacy Settings -->
+                <section id="privacy" class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Privacy</h2>
+                        <p class="section-description">Control your privacy and data sharing</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Data Sharing</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Analytics</div>
+                                <div class="setting-description">Help us improve by sharing usage analytics</div>
+                            </div>
+                            <div class="toggle-switch" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Crash Reports</div>
+                                <div class="setting-description">Automatically send crash reports</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="settingsPage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data & Storage Settings -->
+                <section id="data" class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Data & Storage</h2>
+                        <p class="section-description">Manage your data and storage options</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Storage</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Storage Used</div>
+                                <div class="setting-description">2.3 MB of 100 MB used</div>
+                            </div>
+                            <button class="btn btn-outline">Manage Storage</button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Export Data</div>
+                                <div class="setting-description">Download all your data</div>
+                            </div>
+                            <button class="btn btn-outline" onclick="settingsPage.exportData()">Export</button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Import Data</div>
+                                <div class="setting-description">Import tasks from other apps</div>
+                            </div>
+                            <button class="btn btn-outline" onclick="settingsPage.importData()">Import</button>
+                        </div>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h4>Danger Zone</h4>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Clear All Data</div>
+                                <div class="setting-description">Permanently delete all your tasks and settings</div>
+                            </div>
+                            <button class="btn btn-danger" onclick="settingsPage.clearAllData()">Clear Data</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account Settings -->
+                <section id="account" class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Account</h2>
+                        <p class="section-description">Manage your account information</p>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-group-title">Profile Information</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Name</div>
+                                <div class="setting-description">John Doe</div>
+                            </div>
+                            <button class="btn btn-outline">Edit</button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Email</div>
+                                <div class="setting-description">john.doe@example.com</div>
+                            </div>
+                            <button class="btn btn-outline">Change</button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Password</div>
+                                <div class="setting-description">Last changed 30 days ago</div>
+                            </div>
+                            <button class="btn btn-outline">Update</button>
+                        </div>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h4>Account Actions</h4>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Delete Account</div>
+                                <div class="setting-description">Permanently delete your account and all data</div>
+                            </div>
+                            <button class="btn btn-danger" onclick="settingsPage.deleteAccount()">Delete Account</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Settings page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const settingsPage = {
+                currentSection: 'general',
+
+                init() {
+                    this.setupEventListeners();
+                    this.loadSettings();
+                },
+
+                setupEventListeners() {
+                    // Navigation
+                    document.querySelectorAll('.settings-nav a').forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const section = e.target.dataset.section;
+                            this.switchSection(section);
+                        });
+                    });
+                },
+
+                switchSection(sectionId) {
+                    // Update navigation
+                    document.querySelectorAll('.settings-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+                    // Update content
+                    document.querySelectorAll('.settings-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(sectionId).classList.add('active');
+
+                    this.currentSection = sectionId;
+                },
+
+                toggleSwitch(element) {
+                    element.classList.toggle('active');
+                    const isActive = element.classList.contains('active');
+                    const label = element.parentElement.querySelector('.setting-label').textContent;
+                    taskManager.showToast(`${label} ${isActive ? 'enabled' : 'disabled'}`, 'success');
+                },
+
+                selectTheme(element, theme) {
+                    document.querySelectorAll('.theme-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    element.classList.add('selected');
+                    taskManager.showToast(`Theme changed to ${theme}`, 'success');
+                },
+
+                loadSettings() {
+                    // Load settings from localStorage and update UI
+                    const settings = taskManager.settings;
+                    
+                    // Update toggle switches based on settings
+                    if (settings.notifications) {
+                        document.querySelector('.toggle-switch').classList.add('active');
+                    }
+                },
+
+                saveSettings() {
+                    // Save current settings to localStorage
+                    const settings = {
+                        theme: 'light',
+                        notifications: true,
+                        autoSave: true,
+                        dateFormat: 'MM/DD/YYYY',
+                        defaultPriority: 'medium',
+                        defaultProject: 'Work'
+                    };
+                    
+                    taskManager.saveSettings();
+                    taskManager.showToast('Settings saved successfully!', 'success');
+                },
+
+                exportData() {
+                    const data = {
+                        tasks: taskManager.tasks,
+                        projects: taskManager.projects,
+                        settings: taskManager.settings,
+                        exportDate: new Date().toISOString()
+                    };
+                    
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `taskflow-export-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    
+                    taskManager.showToast('Data exported successfully!', 'success');
+                },
+
+                importData() {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            try {
+                                const data = JSON.parse(event.target.result);
+                                
+                                if (data.tasks) {
+                                    taskManager.tasks = data.tasks;
+                                    taskManager.saveTasks();
+                                }
+                                
+                                if (data.projects) {
+                                    taskManager.projects = data.projects;
+                                    taskManager.saveProjects();
+                                }
+                                
+                                if (data.settings) {
+                                    taskManager.settings = data.settings;
+                                    taskManager.saveSettings();
+                                }
+                                
+                                taskManager.showToast('Data imported successfully!', 'success');
+                                setTimeout(() => location.reload(), 1000);
+                            } catch (error) {
+                                taskManager.showToast('Error importing data. Please check the file format.', 'error');
+                            }
+                        };
+                        reader.readAsText(file);
+                    };
+                    input.click();
+                },
+
+                clearAllData() {
+                    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                        localStorage.clear();
+                        taskManager.showToast('All data cleared successfully!', 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                },
+
+                deleteAccount() {
+                    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                        if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+                            taskManager.showToast('Account deletion feature coming soon', 'warning');
+                        }
+                    }
+                }
+            };
+
+            // Initialize settings page
+            settingsPage.init();
+
+            // Make globally available
+            window.settingsPage = settingsPage;
+        });
+    </script>
+</body>
+</html>

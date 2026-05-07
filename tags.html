@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tags & Labels - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .tags-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .tags-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+
+        .tag-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--light-color);
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .tag-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tag-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tag-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tag-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tag-name {
+            font-weight: 500;
+        }
+
+        .tag-count {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+
+        .tag-item.active .tag-count {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tag-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tag-item:hover .tag-actions {
+            opacity: 1;
+        }
+
+        .tag-action-btn {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .tag-action-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+        }
+
+        .tag-item.active .tag-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .tags-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .create-tag-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .tag-form {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tag-form input,
+        .tag-form input[type="color"] {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .tag-form input[type="color"] {
+            width: 50px;
+            height: 42px;
+            cursor: pointer;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .cloud-tag {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .cloud-tag:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cloud-tag.selected {
+            border-color: var(--dark-color);
+        }
+
+        .tag-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.875rem;
+        }
+
+        .tag-tasks {
+            margin-top: 2rem;
+        }
+
+        .task-item {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-color);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .tags-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .tag-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+                    <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <div class="grid grid-cols-2">
+                <div>
+                    <h1 class="page-title">Tags & Labels</h1>
+                    <p class="page-subtitle">Organize tasks with custom tags and labels</p>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="tagsPage.openCreateModal()">
+                        <i class="fas fa-plus"></i> Create Tag
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Tag Section -->
+        <section class="create-tag-section fade-in">
+            <h2>Quick Create Tag</h2>
+            <p>Create custom tags to categorize your tasks</p>
+            <form class="tag-form" onsubmit="tagsPage.createTag(event)">
+                <input type="text" placeholder="Enter tag name" id="quick-tag-name" required>
+                <input type="color" value="#4f46e5" id="quick-tag-color">
+                <button type="submit" class="btn btn-outline" style="background: white; color: var(--primary-color);">
+                    <i class="fas fa-plus"></i> Create
+                </button>
+            </form>
+        </section>
+
+        <!-- Statistics -->
+        <section class="tag-stats fade-in">
+            <div class="stat-card">
+                <div class="stat-value" id="total-tags">8</div>
+                <div class="stat-label">Total Tags</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="tagged-tasks">24</div>
+                <div class="stat-label">Tagged Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="most-used">urgent</div>
+                <div class="stat-label">Most Used Tag</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-tags">2.3</div>
+                <div class="stat-label">Avg Tags per Task</div>
+            </div>
+        </section>
+
+        <div class="tags-container fade-in">
+            <!-- Tags Sidebar -->
+            <aside class="tags-sidebar">
+                <h3 style="margin-bottom: 1rem;">All Tags</h3>
+                <div id="tags-list">
+                    <!-- Tags will be populated here -->
+                </div>
+                <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" onclick="tagsPage.openCreateModal()">
+                    <i class="fas fa-plus"></i> Create New Tag
+                </button>
+            </aside>
+
+            <!-- Tags Content -->
+            <div class="tags-content">
+                <!-- Tag Cloud -->
+                <div>
+                    <h3 style="margin-bottom: 1rem;">Tag Cloud</h3>
+                    <div class="tag-cloud" id="tag-cloud">
+                        <!-- Tag cloud will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Tag Tasks -->
+                <div class="tag-tasks">
+                    <h3>Tasks with Selected Tags</h3>
+                    <div id="tagged-tasks-list">
+                        <div class="empty-state">
+                            <i class="fas fa-tags"></i>
+                            <h4>No tags selected</h4>
+                            <p>Select tags from the sidebar or tag cloud to view related tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Tag Modal -->
+    <div id="create-tag-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Tag</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="tag-form" onsubmit="tagsPage.handleTagSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Tag Name *</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color</label>
+                    <input type="color" name="color" class="form-control" value="#4f46e5">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Optional description for this tag"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" name="isFavorite"> Favorite Tag
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Tag
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="tagsPage.closeCreateModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TaskFlow</h4>
+                    <p>Professional task management for individuals and teams. Stay organized, meet deadlines, and boost productivity.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                        <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="team.html"><i class="fas fa-users"></i> Team Collaboration</a></li>
+                        <li><a href="timetracking.html"><i class="fas fa-clock"></i> Time Tracking</a></li>
+                        <li><a href="tags.html"><i class="fas fa-tags"></i> Tags & Labels</a></li>
+                        <li><a href="templates.html"><i class="fas fa-copy"></i> Templates</a></li>
+                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="mailto:support@taskflow.com"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p>&copy; 2026 TaskFlow. All rights reserved.</p>
+                    <p class="footer-version">Version 2.0.1 &bull; <a href="#" style="color: var(--gray-color);">Privacy Policy</a> &bull; <a href="#" style="color: var(--gray-color);">Terms of Service</a></p>
+                </div>
+                <div class="footer-bottom-right">
+                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> by TaskFlow Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Tags page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const tagsPage = {
+                tags: [
+                    { id: 1, name: 'urgent', color: '#ef4444', count: 8, isFavorite: true },
+                    { id: 2, name: 'work', color: '#4f46e5', count: 12, isFavorite: false },
+                    { id: 3, name: 'personal', color: '#10b981', count: 6, isFavorite: false },
+                    { id: 4, name: 'meeting', color: '#f59e0b', count: 4, isFavorite: false },
+                    { id: 5, name: 'review', color: '#8b5cf6', count: 7, isFavorite: true },
+                    { id: 6, name: 'development', color: '#06b6d4', count: 9, isFavorite: false },
+                    { id: 7, name: 'design', color: '#ec4899', count: 5, isFavorite: false },
+                    { id: 8, name: 'bug', color: '#dc2626', count: 3, isFavorite: false }
+                ],
+                selectedTags: new Set(),
+
+                init() {
+                    this.loadTags();
+                    this.renderTags();
+                    this.renderTagCloud();
+                    this.updateStatistics();
+                },
+
+                loadTags() {
+                    const saved = localStorage.getItem('customTags');
+                    if (saved) {
+                        const customTags = JSON.parse(saved);
+                        this.tags = [...this.tags, ...customTags];
+                    }
+                },
+
+                saveTags() {
+                    const customTags = this.tags.filter(tag => tag.id > 8); // Only save custom tags
+                    localStorage.setItem('customTags', JSON.stringify(customTags));
+                },
+
+                renderTags() {
+                    const container = document.getElementById('tags-list');
+                    
+                    container.innerHTML = this.tags.map(tag => `
+                        <div class="tag-item ${this.selectedTags.has(tag.id) ? 'active' : ''}" 
+                             onclick="tagsPage.toggleTag(${tag.id})">
+                            <div class="tag-info">
+                                <div class="tag-color" style="background: ${tag.color};"></div>
+                                <span class="tag-name">${tag.name}</span>
+                                ${tag.isFavorite ? '<i class="fas fa-star" style="color: gold;"></i>' : ''}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="tag-count">${tag.count}</span>
+                                <div class="tag-actions">
+                                    <button class="tag-action-btn" onclick="event.stopPropagation(); tagsPage.editTag(${tag.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    ${tag.id > 8 ? `
+                                        <button class="tag-action-btn" onclick="event.stopPropagation(); tagsPage.deleteTag(${tag.id})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                },
+
+                renderTagCloud() {
+                    const container = document.getElementById('tag-cloud');
+                    const maxCount = Math.max(...this.tags.map(tag => tag.count));
+                    
+                    container.innerHTML = this.tags.map(tag => {
+                        const fontSize = 0.875 + (tag.count / maxCount) * 1.5;
+                        const isSelected = this.selectedTags.has(tag.id);
+                        return `
+                            <span class="cloud-tag ${isSelected ? 'selected' : ''}" 
+                                  style="background: ${tag.color}20; color: ${tag.color}; font-size: ${fontSize}rem;"
+                                  onclick="tagsPage.toggleTag(${tag.id})">
+                                ${tag.name} (${tag.count})
+                            </span>
+                        `;
+                    }).join('');
+                },
+
+                toggleTag(tagId) {
+                    if (this.selectedTags.has(tagId)) {
+                        this.selectedTags.delete(tagId);
+                    } else {
+                        this.selectedTags.add(tagId);
+                    }
+                    
+                    this.renderTags();
+                    this.renderTagCloud();
+                    this.renderTaggedTasks();
+                },
+
+                renderTaggedTasks() {
+                    const container = document.getElementById('tagged-tasks-list');
+                    
+                    if (this.selectedTags.size === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-tags"></i>
+                                <h4>No tags selected</h4>
+                                <p>Select tags from the sidebar or tag cloud to view related tasks</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    const selectedTagNames = Array.from(this.selectedTags).map(id => {
+                        const tag = this.tags.find(t => t.id === id);
+                        return tag ? tag.name : '';
+                    }).filter(name => name);
+                    
+                    const filteredTasks = taskManager.tasks.filter(task => {
+                        return task.tags && task.tags.some(taskTag => selectedTagNames.includes(taskTag));
+                    });
+                    
+                    if (filteredTasks.length === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-search"></i>
+                                <h4>No tasks found</h4>
+                                <p>No tasks match the selected tags</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    container.innerHTML = filteredTasks.map(task => `
+                        <div class="task-item">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-meta">
+                                <span><i class="fas fa-folder"></i> ${task.project}</span>
+                                <span><i class="fas fa-flag"></i> ${task.priority}</span>
+                                <span><i class="fas fa-calendar"></i> ${task.dueDate}</span>
+                            </div>
+                            <div style="margin-top: 0.5rem;">
+                                ${task.tags.map(tag => `
+                                    <span class="badge badge-outline" style="border-color: ${this.getTagColor(tag)}; color: ${this.getTagColor(tag)};">
+                                        ${tag}
+                                    </span>
+                                `).join(' ')}
+                            </div>
+                        </div>
+                    `).join('');
+                },
+
+                getTagColor(tagName) {
+                    const tag = this.tags.find(t => t.name === tagName);
+                    return tag ? tag.color : '#6b7280';
+                },
+
+                updateStatistics() {
+                    const totalTags = this.tags.length;
+                    const taggedTasks = taskManager.tasks.filter(task => task.tags && task.tags.length > 0).length;
+                    const mostUsedTag = this.tags.reduce((max, tag) => tag.count > max.count ? tag : max, this.tags[0]);
+                    const avgTags = taskManager.tasks.reduce((sum, task) => sum + (task.tags ? task.tags.length : 0), 0) / taskManager.tasks.length;
+                    
+                    document.getElementById('total-tags').textContent = totalTags;
+                    document.getElementById('tagged-tasks').textContent = taggedTasks;
+                    document.getElementById('most-used').textContent = mostUsedTag.name;
+                    document.getElementById('avg-tags').textContent = avgTags.toFixed(1);
+                },
+
+                createTag(event) {
+                    event.preventDefault();
+                    const name = document.getElementById('quick-tag-name').value.trim();
+                    const color = document.getElementById('quick-tag-color').value;
+                    
+                    if (name) {
+                        const newTag = {
+                            id: Date.now(),
+                            name: name,
+                            color: color,
+                            count: 0,
+                            isFavorite: false
+                        };
+                        
+                        this.tags.push(newTag);
+                        this.saveTags();
+                        this.renderTags();
+                        this.renderTagCloud();
+                        this.updateStatistics();
+                        
+                        document.getElementById('quick-tag-name').value = '';
+                        taskManager.showToast(`Tag "${name}" created successfully!`, 'success');
+                    }
+                },
+
+                openCreateModal() {
+                    document.getElementById('create-tag-modal').classList.add('active');
+                },
+
+                closeCreateModal() {
+                    document.getElementById('create-tag-modal').classList.remove('active');
+                    document.getElementById('tag-form').reset();
+                },
+
+                handleTagSubmit(event) {
+                    event.preventDefault();
+                    const form = event.target;
+                    const formData = new FormData(form);
+                    
+                    const newTag = {
+                        id: Date.now(),
+                        name: formData.get('name'),
+                        color: formData.get('color'),
+                        description: formData.get('description'),
+                        isFavorite: formData.get('isFavorite') === 'on',
+                        count: 0
+                    };
+                    
+                    this.tags.push(newTag);
+                    this.saveTags();
+                    this.renderTags();
+                    this.renderTagCloud();
+                    this.updateStatistics();
+                    
+                    this.closeCreateModal();
+                    taskManager.showToast(`Tag "${newTag.name}" created successfully!`, 'success');
+                },
+
+                editTag(tagId) {
+                    const tag = this.tags.find(t => t.id === tagId);
+                    if (tag) {
+                        taskManager.showToast(`Edit tag "${tag.name}" feature coming soon!`, 'info');
+                    }
+                },
+
+                deleteTag(tagId) {
+                    const tag = this.tags.find(t => t.id === tagId);
+                    if (tag && confirm(`Are you sure you want to delete the tag "${tag.name}"?`)) {
+                        this.tags = this.tags.filter(t => t.id !== tagId);
+                        this.selectedTags.delete(tagId);
+                        this.saveTags();
+                        this.renderTags();
+                        this.renderTagCloud();
+                        this.renderTaggedTasks();
+                        this.updateStatistics();
+                        taskManager.showToast(`Tag "${tag.name}" deleted successfully!`, 'success');
+                    }
+                }
+            };
+
+            // Initialize tags page
+            tagsPage.init();
+
+            // Make globally available
+            window.tagsPage = tagsPage;
+        });
+    </script>
+</body>
+</html>

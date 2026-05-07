@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Projects specific styles */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary-color);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .project-card.completed {
+            border-top-color: var(--success-color);
+        }
+
+        .project-card.archived {
+            opacity: 0.7;
+            border-top-color: var(--gray-color);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .project-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .project-description {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            text-transform: uppercase;
+        }
+
+        .project-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-actions {
+            opacity: 1;
+        }
+
+        .project-members {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .member-count {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-badge {
+            padding: 0.25rem 0.75rem;
+            background: var(--light-color);
+            color: var(--gray-color);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-color);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--border-color);
+        }
+
+        .project-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            background: var(--light-color);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .project-details-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .project-timeline {
+            margin-top: 1rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        @media (max-width: 768px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-stats {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+                    <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <div class="grid grid-cols-2">
+                <div>
+                    <h1 class="page-title">Projects</h1>
+                    <p class="page-subtitle">Organize and manage your projects</p>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="projectsPage.openProjectModal()">
+                        <i class="fas fa-plus"></i> New Project
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Statistics -->
+        <section class="grid grid-cols-4 fade-in">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Total Projects</h3>
+                    <i class="fas fa-project-diagram" style="color: var(--primary-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="total-projects" class="text-3xl font-bold">0</h2>
+                    <p class="text-gray-500">All projects</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Active</h3>
+                    <i class="fas fa-play-circle" style="color: var(--success-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="active-projects" class="text-3xl font-bold">0</h2>
+                    <p class="text-gray-500">Active projects</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Completed</h3>
+                    <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="completed-projects" class="text-3xl font-bold">0</h2>
+                    <p class="text-gray-500">Completed projects</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Total Tasks</h3>
+                    <i class="fas fa-tasks" style="color: var(--warning-color);"></i>
+                </div>
+                <div class="card-body">
+                    <h2 id="project-tasks" class="text-3xl font-bold">0</h2>
+                    <p class="text-gray-500">Across all projects</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters and Search -->
+        <section class="card fade-in">
+            <div class="card-header">
+                <h3 class="card-title">Filters & Search</h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-2">
+                    <div class="form-group">
+                        <input type="text" id="project-search" class="form-control" placeholder="Search projects...">
+                    </div>
+                    <div class="form-group">
+                        <select id="project-sort" class="form-control form-select">
+                            <option value="name">Sort by Name</option>
+                            <option value="created">Sort by Created Date</option>
+                            <option value="tasks">Sort by Task Count</option>
+                            <option value="progress">Sort by Progress</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="project-filters">
+                    <button class="filter-btn active" data-filter="all">All Projects</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="archived">Archived</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Grid -->
+        <section class="fade-in">
+            <div id="projects-grid" class="project-grid">
+                <!-- Projects will be rendered here -->
+            </div>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <i class="fas fa-folder-open"></i>
+                <h3>No projects found</h3>
+                <p>Create your first project to get started</p>
+                <button class="btn btn-primary" onclick="projectsPage.openProjectModal()">
+                    <i class="fas fa-plus"></i> Create Project
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Create/Edit Project Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="project-modal-title">Create New Project</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="project-form">
+                <div class="form-group">
+                    <label class="form-label">Project Name *</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Describe your project..."></textarea>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <input type="color" name="color" class="form-control" value="#4f46e5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-control form-select">
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags (comma-separated)</label>
+                    <input type="text" name="tags" class="form-control" placeholder="development, design, marketing">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Team Members (comma-separated emails)</label>
+                    <input type="text" name="members" class="form-control" placeholder="john@example.com, jane@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="startDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="endDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Project
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="projectsPage.closeProjectModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Project Details Modal -->
+    <div id="project-details-modal" class="modal project-details-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Project Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div id="project-details-content">
+                <!-- Project details will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="api-client.js"></script>
+    <script src="script-backend-integrated.js"></script>
+    <script>
+        // Projects page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectsPage = {
+                currentFilter: 'all',
+                searchQuery: '',
+                sortBy: 'name',
+                editingProject: null,
+
+                init() {
+                    this.setupEventListeners();
+                    this.renderProjects();
+                    this.updateStatistics();
+                },
+
+                setupEventListeners() {
+                    // Search functionality
+                    document.getElementById('project-search').addEventListener('input', (e) => {
+                        this.searchQuery = e.target.value.toLowerCase();
+                        this.renderProjects();
+                    });
+
+                    // Sort functionality
+                    document.getElementById('project-sort').addEventListener('change', (e) => {
+                        this.sortBy = e.target.value;
+                        this.renderProjects();
+                    });
+
+                    // Filter buttons
+                    document.querySelectorAll('.filter-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            this.currentFilter = e.target.dataset.filter;
+                            this.updateActiveFilter(e.target);
+                            this.renderProjects();
+                        });
+                    });
+
+                    // Project form submission
+                    document.getElementById('project-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleProjectSubmit();
+                    });
+                },
+
+                getFilteredProjects() {
+                    let projects = [...taskManager.projects];
+
+                    // Apply search
+                    if (this.searchQuery) {
+                        projects = projects.filter(project => 
+                            project.name.toLowerCase().includes(this.searchQuery) ||
+                            project.description.toLowerCase().includes(this.searchQuery) ||
+                            (project.tags && project.tags.some(tag => tag.toLowerCase().includes(this.searchQuery)))
+                        );
+                    }
+
+                    // Apply filter
+                    if (this.currentFilter !== 'all') {
+                        projects = projects.filter(project => project.status === this.currentFilter);
+                    }
+
+                    // Apply sorting
+                    projects = this.sortProjects(projects);
+
+                    return projects;
+                },
+
+                sortProjects(projects) {
+                    switch (this.sortBy) {
+                        case 'name':
+                            return projects.sort((a, b) => a.name.localeCompare(b.name));
+                        case 'created':
+                            return projects.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                        case 'tasks':
+                            return projects.sort((a, b) => {
+                                const aTasks = taskManager.getTasksByProject(a.name).length;
+                                const bTasks = taskManager.getTasksByProject(b.name).length;
+                                return bTasks - aTasks;
+                            });
+                        case 'progress':
+                            return projects.sort((a, b) => {
+                                const aProgress = this.calculateProgress(a.name);
+                                const bProgress = this.calculateProgress(b.name);
+                                return bProgress - aProgress;
+                            });
+                        default:
+                            return projects;
+                    }
+                },
+
+                calculateProgress(projectName) {
+                    const tasks = taskManager.getTasksByProject(projectName);
+                    if (tasks.length === 0) return 0;
+                    const completed = tasks.filter(task => task.status === 'completed').length;
+                    return Math.round((completed / tasks.length) * 100);
+                },
+
+                renderProjects() {
+                    const container = document.getElementById('projects-grid');
+                    const emptyState = document.getElementById('empty-state');
+                    const projects = this.getFilteredProjects();
+
+                    if (projects.length === 0) {
+                        container.style.display = 'none';
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    container.style.display = 'grid';
+                    emptyState.style.display = 'none';
+
+                    container.innerHTML = projects.map(project => this.createProjectCard(project)).join('');
+                    this.attachProjectEventListeners();
+                },
+
+                createProjectCard(project) {
+                    const tasks = taskManager.getTasksByProject(project.name);
+                    const completed = tasks.filter(task => task.status === 'completed').length;
+                    const inProgress = tasks.filter(task => task.status === 'in-progress').length;
+                    const pending = tasks.filter(task => task.status === 'pending').length;
+                    const progress = this.calculateProgress(project.name);
+
+                    const members = project.members || [];
+                    const displayMembers = members.slice(0, 3);
+                    const remainingMembers = Math.max(0, members.length - 3);
+
+                    return `
+                        <div class="project-card ${project.status}" data-project-id="${project.id}" onclick="projectsPage.viewProjectDetails(${project.id})">
+                            <div class="project-header">
+                                <div>
+                                    <h3 class="project-title">${project.name}</h3>
+                                    <div class="project-color" style="background: ${project.color};"></div>
+                                </div>
+                            </div>
+                            <p class="project-description">${project.description || 'No description available'}</p>
+                            
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">${tasks.length}</div>
+                                    <div class="stat-label">Tasks</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">${completed}</div>
+                                    <div class="stat-label">Done</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">${progress}%</div>
+                                    <div class="stat-label">Progress</div>
+                                </div>
+                            </div>
+
+                            <div class="project-progress">
+                                <div class="progress-header">
+                                    <span>Progress</span>
+                                    <span>${progress}%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress}%; background: ${project.color};"></div>
+                                </div>
+                            </div>
+
+                            ${members.length > 0 ? `
+                                <div class="project-members">
+                                    ${displayMembers.map(member => `
+                                        <div class="member-avatar">${member.charAt(0).toUpperCase()}</div>
+                                    `).join('')}
+                                    ${remainingMembers > 0 ? `<span class="member-count">+${remainingMembers} more</span>` : ''}
+                                </div>
+                            ` : ''}
+
+                            ${project.tags && project.tags.length > 0 ? `
+                                <div class="project-tags">
+                                    ${project.tags.map(tag => `
+                                        <span class="project-badge">${tag}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+
+                            <div class="project-actions" onclick="event.stopPropagation()">
+                                <button class="btn btn-sm btn-outline" onclick="projectsPage.editProject(${project.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="projectsPage.deleteProject(${project.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                attachProjectEventListeners() {
+                    // Event listeners are handled by inline onclick handlers
+                },
+
+                updateActiveFilter(activeButton) {
+                    document.querySelectorAll('.filter-btn').forEach(button => {
+                        button.classList.remove('active');
+                    });
+                    activeButton.classList.add('active');
+                },
+
+                updateStatistics() {
+                    const projects = taskManager.projects;
+                    const active = projects.filter(p => p.status === 'active').length;
+                    const completed = projects.filter(p => p.status === 'completed').length;
+                    const totalTasks = taskManager.tasks.length;
+
+                    document.getElementById('total-projects').textContent = projects.length;
+                    document.getElementById('active-projects').textContent = active;
+                    document.getElementById('completed-projects').textContent = completed;
+                    document.getElementById('project-tasks').textContent = totalTasks;
+                },
+
+                openProjectModal(projectId = null) {
+                    this.editingProject = projectId;
+                    const modal = document.getElementById('project-modal');
+                    const title = document.getElementById('project-modal-title');
+                    const form = document.getElementById('project-form');
+
+                    if (projectId) {
+                        const project = taskManager.projects.find(p => p.id === projectId);
+                        if (project) {
+                            title.textContent = 'Edit Project';
+                            form.name.value = project.name;
+                            form.description.value = project.description || '';
+                            form.color.value = project.color;
+                            form.status.value = project.status;
+                            form.tags.value = project.tags ? project.tags.join(', ') : '';
+                            form.members.value = project.members ? project.members.join(', ') : '';
+                            form.startDate.value = project.startDate || '';
+                            form.endDate.value = project.endDate || '';
+                        }
+                    } else {
+                        title.textContent = 'Create New Project';
+                        form.reset();
+                        form.color.value = '#4f46e5';
+                    }
+
+                    modal.classList.add('active');
+                },
+
+                closeProjectModal() {
+                    document.getElementById('project-modal').classList.remove('active');
+                    this.editingProject = null;
+                },
+
+                handleProjectSubmit() {
+                    const form = document.getElementById('project-form');
+                    const formData = new FormData(form);
+                    
+                    const projectData = {
+                        name: formData.get('name'),
+                        description: formData.get('description'),
+                        color: formData.get('color'),
+                        status: formData.get('status'),
+                        tags: formData.get('tags') ? formData.get('tags').split(',').map(tag => tag.trim()) : [],
+                        members: formData.get('members') ? formData.get('members').split(',').map(member => member.trim()) : [],
+                        startDate: formData.get('startDate'),
+                        endDate: formData.get('endDate')
+                    };
+
+                    if (this.editingProject) {
+                        // Update existing project
+                        const projectIndex = taskManager.projects.findIndex(p => p.id === this.editingProject);
+                        if (projectIndex !== -1) {
+                            taskManager.projects[projectIndex] = { ...taskManager.projects[projectIndex], ...projectData };
+                            taskManager.saveProjects();
+                            taskManager.showToast('Project updated successfully!', 'success');
+                        }
+                    } else {
+                        // Create new project
+                        taskManager.addProject(projectData);
+                    }
+
+                    this.closeProjectModal();
+                    this.renderProjects();
+                    this.updateStatistics();
+                },
+
+                editProject(projectId) {
+                    this.openProjectModal(projectId);
+                },
+
+                deleteProject(projectId) {
+                    const project = taskManager.projects.find(p => p.id === projectId);
+                    if (project) {
+                        const tasks = taskManager.getTasksByProject(project.name);
+                        if (tasks.length > 0) {
+                            if (!confirm(`This project has ${tasks.length} tasks. Are you sure you want to delete it?`)) {
+                                return;
+                            }
+                        } else {
+                            if (!confirm('Are you sure you want to delete this project?')) {
+                                return;
+                            }
+                        }
+                        taskManager.deleteProject(projectId);
+                        this.renderProjects();
+                        this.updateStatistics();
+                    }
+                },
+
+                viewProjectDetails(projectId) {
+                    const project = taskManager.projects.find(p => p.id === projectId);
+                    if (!project) return;
+
+                    const tasks = taskManager.getTasksByProject(project.name);
+                    const completed = tasks.filter(task => task.status === 'completed').length;
+                    const progress = this.calculateProgress(project.name);
+
+                    const modalContent = document.getElementById('project-details-content');
+                    modalContent.innerHTML = `
+                        <div class="project-details">
+                            <div class="project-header">
+                                <h3>${project.name}</h3>
+                                <div class="project-color" style="background: ${project.color}; width: 40px; height: 40px;"></div>
+                            </div>
+                            <p><strong>Status:</strong> <span class="badge badge-${project.status}">${project.status}</span></p>
+                            <p><strong>Description:</strong> ${project.description || 'No description'}</p>
+                            <p><strong>Progress:</strong> ${progress}% (${completed}/${tasks.length} tasks completed)</p>
+                            <div class="progress">
+                                <div class="progress-bar" style="background: ${project.color}; width: ${progress}%;"></div>
+                            </div>
+                            
+                            ${project.tags && project.tags.length > 0 ? `
+                                <p><strong>Tags:</strong> ${project.tags.map(tag => `<span class="badge badge-outline">${tag}</span>`).join(' ')}</p>
+                            ` : ''}
+                            
+                            ${project.members && project.members.length > 0 ? `
+                                <p><strong>Team Members:</strong></p>
+                                <ul>
+                                    ${project.members.map(member => `<li>${member}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            
+                            ${project.startDate || project.endDate ? `
+                                <p><strong>Timeline:</strong> ${project.startDate || 'Not set'} - ${project.endDate || 'Not set'}</p>
+                            ` : ''}
+                            
+                            <div class="project-timeline">
+                                <h4>Recent Tasks</h4>
+                                ${tasks.slice(0, 5).map(task => `
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon">
+                                            <i class="fas fa-${task.status === 'completed' ? 'check' : 'clock'}"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">${task.title}</div>
+                                            <div class="timeline-date">Due: ${task.dueDate} | Status: ${task.status}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="mt-3">
+                                <button class="btn btn-primary" onclick="projectsPage.editProject(${project.id}); taskManager.closeModal();">
+                                    <i class="fas fa-edit"></i> Edit Project
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    taskManager.openModal('project-details-modal');
+                }
+            };
+
+            // Initialize projects page
+            projectsPage.init();
+
+            // Make functions globally available
+            window.projectsPage = projectsPage;
+        });
+    </script>
+</body>
+</html>

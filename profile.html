@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .profile-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            height: fit-content;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 600;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--secondary-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+        }
+
+        .profile-role {
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            text-transform: uppercase;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .profile-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .content-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--light-color);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .achievement-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-description {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .activity-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .activity-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+
+        .timeline-content {
+            background: var(--light-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-time {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <a href="tasks.html" class="btn btn-primary btn-sm" style="flex-shrink:0; margin-left:auto;"><i class="fas fa-plus"></i> New Task</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-header fade-in">
+            <h1 class="page-title">My Profile</h1>
+            <p class="page-subtitle">Manage your personal information and view your achievements</p>
+        </section>
+
+        <div class="profile-container fade-in">
+            <!-- Profile Sidebar -->
+            <aside class="profile-sidebar">
+                <div class="profile-avatar">
+                    JD
+                    <div class="avatar-upload">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <h2 class="profile-name">John Doe</h2>
+                <p class="profile-email">john.doe@example.com</p>
+                <span class="profile-role">Project Manager</span>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">142</div>
+                        <div class="stat-label">Tasks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn btn-primary" onclick="profilePage.editProfile()">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                    <button class="btn btn-outline" onclick="profilePage.changePassword()">
+                        <i class="fas fa-lock"></i> Change Password
+                    </button>
+                    <button class="btn btn-outline" onclick="profilePage.exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Profile Content -->
+            <div class="profile-content">
+                <div class="content-tabs">
+                    <button class="tab-btn active" onclick="profilePage.switchTab('overview')">Overview</button>
+                    <button class="tab-btn" onclick="profilePage.switchTab('achievements')">Achievements</button>
+                    <button class="tab-btn" onclick="profilePage.switchTab('activity')">Activity</button>
+                    <button class="tab-btn" onclick="profilePage.switchTab('preferences')">Preferences</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div id="overview" class="tab-content active">
+                    <h3>Overview</h3>
+                    <div class="grid grid-cols-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Recent Performance</h4>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Tasks Completed This Week:</strong> 12</p>
+                                <p><strong>Tasks Completed This Month:</strong> 45</p>
+                                <p><strong>Current Streak:</strong> 7 days</p>
+                                <p><strong>Productivity Score:</strong> 85/100</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Project Contributions</h4>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Active Projects:</strong> 3</p>
+                                <p><strong>Completed Projects:</strong> 9</p>
+                                <p><strong>Team Members:</strong> 5</p>
+                                <p><strong>Role:</strong> Project Manager</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements Tab -->
+                <div id="achievements" class="tab-content">
+                    <h3>Achievements</h3>
+                    <div class="achievement-grid">
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <h4 class="achievement-title">7-Day Streak</h4>
+                            <p class="achievement-description">Completed tasks for 7 consecutive days</p>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h4 class="achievement-title">Task Master</h4>
+                            <p class="achievement-description">Completed 100+ tasks</p>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h4 class="achievement-title">Speed Demon</h4>
+                            <p class="achievement-description">Completed 5 tasks in one day</p>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h4 class="achievement-title">Project Hero</h4>
+                            <p class="achievement-description">Successfully completed 10 projects</p>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <h4 class="achievement-title">Team Player</h4>
+                            <p class="achievement-description">Collaborated on 20+ team tasks</p>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h4 class="achievement-title">Productivity King</h4>
+                            <p class="achievement-description">Maintained 90%+ completion rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Tab -->
+                <div id="activity" class="tab-content">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-title">Completed task "Update project documentation"</div>
+                                <div class="timeline-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-title">Started working on "Review code changes"</div>
+                                <div class="timeline-time">5 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-title">Created new task "Team meeting preparation"</div>
+                                <div class="timeline-time">1 day ago</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-title">Completed project "Website Redesign"</div>
+                                <div class="timeline-time">2 days ago</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-title">Achieved "7-Day Streak" milestone</div>
+                                <div class="timeline-time">3 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div id="preferences" class="tab-content">
+                    <h3>Preferences</h3>
+                    <div class="setting-group">
+                        <h4>Notification Settings</h4>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Email Notifications</div>
+                                <div class="setting-description">Receive task reminders via email</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="profilePage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Desktop Notifications</div>
+                                <div class="setting-description">Show browser notifications</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="profilePage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h4>Display Settings</h4>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Compact Mode</div>
+                                <div class="setting-description">Use a more compact interface</div>
+                            </div>
+                            <div class="toggle-switch" onclick="profilePage.toggleSwitch(this)"></div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Show Completed Tasks</div>
+                                <div class="setting-description">Display completed tasks in lists</div>
+                            </div>
+                            <div class="toggle-switch active" onclick="profilePage.toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TaskFlow</h4>
+                    <p>Professional task management for individuals and teams. Stay organized, meet deadlines, and boost productivity.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                        <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="team.html"><i class="fas fa-users"></i> Team Collaboration</a></li>
+                        <li><a href="timetracking.html"><i class="fas fa-clock"></i> Time Tracking</a></li>
+                        <li><a href="tags.html"><i class="fas fa-tags"></i> Tags & Labels</a></li>
+                        <li><a href="templates.html"><i class="fas fa-copy"></i> Templates</a></li>
+                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="mailto:support@taskflow.com"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p>&copy; 2026 TaskFlow. All rights reserved.</p>
+                    <p class="footer-version">Version 2.0.1 &bull; <a href="#" style="color: var(--gray-color);">Privacy Policy</a> &bull; <a href="#" style="color: var(--gray-color);">Terms of Service</a></p>
+                </div>
+                <div class="footer-bottom-right">
+                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> by TaskFlow Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Profile page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const profilePage = {
+                currentTab: 'overview',
+
+                init() {
+                    this.setupEventListeners();
+                },
+
+                setupEventListeners() {
+                    // Tab switching is handled by inline onclick handlers
+                },
+
+                switchTab(tabName) {
+                    // Update tab buttons
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+
+                    // Update tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabName).classList.add('active');
+
+                    this.currentTab = tabName;
+                },
+
+                toggleSwitch(element) {
+                    element.classList.toggle('active');
+                    const isActive = element.classList.contains('active');
+                    const label = element.parentElement.querySelector('.setting-label').textContent;
+                    taskManager.showToast(`${label} ${isActive ? 'enabled' : 'disabled'}`, 'success');
+                },
+
+                editProfile() {
+                    taskManager.showToast('Profile editor coming soon!', 'info');
+                },
+
+                changePassword() {
+                    taskManager.showToast('Password change feature coming soon!', 'info');
+                },
+
+                exportData() {
+                    const profileData = {
+                        name: 'John Doe',
+                        email: 'john.doe@example.com',
+                        role: 'Project Manager',
+                        stats: {
+                            tasks: 142,
+                            completionRate: 89,
+                            projects: 12
+                        },
+                        achievements: [
+                            '7-Day Streak',
+                            'Task Master',
+                            'Speed Demon'
+                        ],
+                        exportDate: new Date().toISOString()
+                    };
+
+                    const blob = new Blob([JSON.stringify(profileData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `profile-export-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    
+                    taskManager.showToast('Profile data exported successfully!', 'success');
+                }
+            };
+
+            // Initialize profile page
+            profilePage.init();
+
+            // Make globally available
+            window.profilePage = profilePage;
+        });
+    </script>
+</body>
+</html>

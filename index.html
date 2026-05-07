@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Professional Task Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ── Hero ── */
+        .hero {
+            background: var(--gradient-hero);
+            border-radius: var(--border-radius-xl);
+            padding: 4rem 3rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 320px; height: 320px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -40px;
+            width: 240px; height: 240px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 100px;
+            padding: 0.3rem 0.875rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1.25rem;
+        }
+        .hero-eyebrow i { font-size: 0.625rem; color: #4ade80; }
+        .hero h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+        .hero h1 span { color: #60a5fa; }
+        .hero p {
+            font-size: 1.0625rem;
+            color: rgba(255,255,255,0.65);
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+        .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .btn-hero-primary {
+            background: white;
+            color: #4338ca;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+        .btn-hero-ghost {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-hero-ghost:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero-stat-value { font-size: 1.625rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
+        .hero-stat-label { font-size: 0.8125rem; color: rgba(255,255,255,0.5); margin-top: 0.125rem; }
+
+        /* ── KPI Cards ── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .kpi-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.875rem; }
+        .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .kpi-icon.blue  { background: #eff6ff; color: #2563eb; }
+        .kpi-icon.green { background: #f0fdf4; color: #059669; }
+        .kpi-icon.amber { background: #fffbeb; color: #d97706; }
+        .kpi-icon.red   { background: #fef2f2; color: #dc2626; }
+        .kpi-badge { font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 100px; }
+        .kpi-badge.up   { background: #f0fdf4; color: #059669; }
+        .kpi-badge.down { background: #fef2f2; color: #dc2626; }
+        .kpi-badge.neutral { background: var(--light-gray); color: var(--gray-color); }
+        .kpi-value { font-size: 1.875rem; font-weight: 700; color: var(--dark-color); letter-spacing: -1px; line-height: 1; margin-bottom: 0.25rem; }
+        .kpi-label { font-size: 0.8125rem; color: var(--gray-color); font-weight: 500; }
+        .kpi-progress { margin-top: 0.875rem; height: 4px; background: var(--light-gray); border-radius: 100px; overflow: hidden; }
+        .kpi-progress-fill { height: 100%; border-radius: 100px; transition: width 0.6s ease; }
+
+        /* ── Section label ── */
+        .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-color); margin-bottom: 0.5rem; }
+
+        /* ── Quick action cards ── */
+        .action-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .action-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .action-card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; margin-bottom: 0.25rem; }
+        .action-card h3 { font-size: 0.9375rem; font-weight: 600; color: var(--dark-color); margin: 0; }
+        .action-card p { font-size: 0.8125rem; color: var(--gray-color); margin: 0; line-height: 1.5; }
+
+        /* ── Feature list ── */
+        .feature-item { display: flex; align-items: flex-start; gap: 0.875rem; padding: 0.875rem 0; border-bottom: 1px solid var(--border-color); }
+        .feature-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .feature-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem; flex-shrink: 0; }
+        .feature-item h4 { font-size: 0.9rem; font-weight: 600; color: var(--dark-color); margin-bottom: 0.15rem; }
+        .feature-item p { font-size: 0.8125rem; color: var(--gray-color); margin: 0; line-height: 1.5; }
+
+        @media (max-width: 1024px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .hero { padding: 2.5rem 1.5rem; }
+            .hero h1 { font-size: 2rem; }
+            .hero-stats { gap: 1.5rem; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) { .kpi-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="calendar.html">Calendar</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <button class="btn btn-primary btn-sm" onclick="taskManager.openModal('task-modal')" style="flex-shrink:0; margin-left:auto;">
+                <i class="fas fa-plus"></i> New Task
+            </button>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <!-- Hero -->
+        <section class="hero fade-in">
+            <div class="hero-inner">
+                <div class="hero-eyebrow">
+                    <i class="fas fa-circle"></i> All systems operational
+                </div>
+                <h1>Manage work.<br><span>Ship faster.</span></h1>
+                <p>TaskFlow keeps your team aligned, deadlines visible, and priorities clear — all in one place.</p>
+                <div class="hero-actions">
+                    <button class="btn-hero-primary" onclick="taskManager.openModal('task-modal')">
+                        <i class="fas fa-plus"></i> Create Task
+                    </button>
+                    <a href="dashboard.html" class="btn-hero-ghost">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-value" id="hero-total">—</div>
+                        <div class="hero-stat-label">Total tasks</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value" id="hero-done">—</div>
+                        <div class="hero-stat-label">Completed</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value" id="hero-rate">—</div>
+                        <div class="hero-stat-label">Completion rate</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid fade-in">
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon blue"><i class="fas fa-layer-group"></i></div>
+                    <span class="kpi-badge neutral">All</span>
+                </div>
+                <div class="kpi-value" id="total-tasks-count">0</div>
+                <div class="kpi-label">Total Tasks</div>
+                <div class="kpi-progress"><div class="kpi-progress-fill" id="total-progress" style="width:100%; background:#2563eb;"></div></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon green"><i class="fas fa-check-circle"></i></div>
+                    <span class="kpi-badge up" id="completed-badge">0%</span>
+                </div>
+                <div class="kpi-value" id="completed-tasks-count">0</div>
+                <div class="kpi-label">Completed</div>
+                <div class="kpi-progress"><div class="kpi-progress-fill" id="completed-progress" style="width:0%; background:#059669;"></div></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon amber"><i class="fas fa-spinner"></i></div>
+                    <span class="kpi-badge neutral">Active</span>
+                </div>
+                <div class="kpi-value" id="progress-tasks-count">0</div>
+                <div class="kpi-label">In Progress</div>
+                <div class="kpi-progress"><div class="kpi-progress-fill" id="progress-progress" style="width:0%; background:#d97706;"></div></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon red"><i class="fas fa-exclamation-circle"></i></div>
+                    <span class="kpi-badge down">Urgent</span>
+                </div>
+                <div class="kpi-value" id="overdue-tasks-count">0</div>
+                <div class="kpi-label">Overdue</div>
+                <div class="kpi-progress"><div class="kpi-progress-fill" id="overdue-progress" style="width:0%; background:#dc2626;"></div></div>
+            </div>
+        </div>
+
+        <!-- Recent Tasks + Quick Actions -->
+        <div class="grid grid-cols-3 fade-in" style="align-items:start;">
+            <div style="grid-column: span 2;">
+                <div class="card" style="margin-bottom:0;">
+                    <div class="card-header">
+                        <div>
+                            <div class="section-label">Overview</div>
+                            <h3 class="card-title" style="margin:0;">Recent Tasks</h3>
+                        </div>
+                        <a href="tasks.html" class="btn btn-outline btn-sm">View all <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="card-body">
+                        <div id="recent-tasks-container">
+                            <p style="color:var(--gray-color); text-align:center; padding:2rem 0; font-size:0.9rem;">No tasks yet — create your first one above.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.875rem;">
+                <div class="section-label">Quick Access</div>
+                <a href="calendar.html" class="action-card">
+                    <div class="action-card-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fas fa-calendar-alt"></i></div>
+                    <h3>Calendar</h3>
+                    <p>View tasks by date and plan your schedule</p>
+                </a>
+                <a href="projects.html" class="action-card">
+                    <div class="action-card-icon" style="background:#f5f3ff; color:#7c3aed;"><i class="fas fa-project-diagram"></i></div>
+                    <h3>Projects</h3>
+                    <p>Organize tasks into focused project groups</p>
+                </a>
+                <a href="analytics.html" class="action-card">
+                    <div class="action-card-icon" style="background:#ecfdf5; color:#059669;"><i class="fas fa-chart-line"></i></div>
+                    <h3>Analytics</h3>
+                    <p>Track productivity trends and performance</p>
+                </a>
+                <a href="team.html" class="action-card">
+                    <div class="action-card-icon" style="background:#fff7ed; color:#ea580c;"><i class="fas fa-users"></i></div>
+                    <h3>Team</h3>
+                    <p>Collaborate and assign tasks to members</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="grid grid-cols-2 fade-in" style="margin-top:1.5rem; align-items:start;">
+            <div class="card" style="margin-bottom:0;">
+                <div class="card-header">
+                    <div>
+                        <div class="section-label">Core Features</div>
+                        <h3 class="card-title" style="margin:0;">Everything you need</h3>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0.25rem;">
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fas fa-bell"></i></div>
+                        <div><h4>Smart Notifications</h4><p>Deadline reminders and team activity alerts keep you in the loop.</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#fffbeb; color:#d97706;"><i class="fas fa-tags"></i></div>
+                        <div><h4>Tags & Labels</h4><p>Categorize and filter tasks with custom color-coded tags.</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#f5f3ff; color:#7c3aed;"><i class="fas fa-users"></i></div>
+                        <div><h4>Team Collaboration</h4><p>Assign tasks, share projects, and track team progress in real time.</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#ecfdf5; color:#059669;"><i class="fas fa-clock"></i></div>
+                        <div><h4>Time Tracking</h4><p>Log hours per task and generate detailed time reports.</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+                <div class="card-header">
+                    <div>
+                        <div class="section-label">More Tools</div>
+                        <h3 class="card-title" style="margin:0;">Built for productivity</h3>
+                    </div>
+                </div>
+                <div class="card-body" style="padding-top:0.25rem;">
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#fef2f2; color:#ef4444;"><i class="fas fa-copy"></i></div>
+                        <div><h4>Task Templates</h4><p>Reuse common workflows with pre-built and custom templates.</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#ecfeff; color:#06b6d4;"><i class="fas fa-chart-bar"></i></div>
+                        <div><h4>Productivity Reports</h4><p>Weekly and monthly insights to help you improve over time.</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#ecfdf5; color:#059669;"><i class="fas fa-database"></i></div>
+                        <div><h4>Data Export</h4><p>Export all your tasks and projects as JSON at any time.</p></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="background:#f5f3ff; color:#7c3aed;"><i class="fas fa-mobile-alt"></i></div>
+                        <div><h4>Fully Responsive</h4><p>Works seamlessly on desktop, tablet, and mobile devices.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Add Task Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">New Task</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label class="form-label">Task Title *</label>
+                    <input type="text" name="title" class="form-control" placeholder="What needs to be done?" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Add details..."></textarea>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select name="priority" class="form-control form-select">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Date *</label>
+                        <input type="date" name="dueDate" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Project</label>
+                    <select name="project" id="project" class="form-control form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags <span style="color:var(--gray-color); font-weight:400;">(comma-separated)</span></label>
+                    <input type="text" name="tags" class="form-control" placeholder="e.g. urgent, design, backend">
+                </div>
+                <div class="form-group" style="margin-bottom:0; display:flex; gap:0.75rem;">
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                    <button type="button" class="btn btn-outline" onclick="taskManager.closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TaskFlow</h4>
+                    <p>Professional task management for individuals and teams. Stay organized, meet deadlines, and boost productivity.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                        <li><a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="team.html"><i class="fas fa-users"></i> Team Collaboration</a></li>
+                        <li><a href="timetracking.html"><i class="fas fa-clock"></i> Time Tracking</a></li>
+                        <li><a href="tags.html"><i class="fas fa-tags"></i> Tags & Labels</a></li>
+                        <li><a href="templates.html"><i class="fas fa-copy"></i> Templates</a></li>
+                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+                        <li><a href="mailto:support@taskflow.com"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <p>&copy; 2026 TaskFlow. All rights reserved.</p>
+                    <span class="footer-version">v2.0.1 &bull; <a href="#">Privacy Policy</a> &bull; <a href="#">Terms of Service</a></span>
+                </div>
+                <div class="footer-bottom-right">
+                    <p>Made with <i class="fas fa-heart"></i> by TaskFlow Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api-client.js"></script>
+    <script src="script-enhanced.js"></script>
+    <script>
+        const taskManager = new TaskManager();
+
+        // Populate hero stats after init
+        document.addEventListener('DOMContentLoaded', () => {
+            const stats = taskManager.updateStats ? taskManager.updateStats() : {};
+            const total = stats.total || taskManager.tasks?.length || 0;
+            const completed = stats.completed || 0;
+            const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            const heroTotal = document.getElementById('hero-total');
+            const heroDone  = document.getElementById('hero-done');
+            const heroRate  = document.getElementById('hero-rate');
+            const compBadge = document.getElementById('completed-badge');
+
+            if (heroTotal) heroTotal.textContent = total;
+            if (heroDone)  heroDone.textContent  = completed;
+            if (heroRate)  heroRate.textContent  = rate + '%';
+            if (compBadge) compBadge.textContent = rate + '%';
+        });
+    </script>
+</body>
+</html>
