@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header><nav class="container"><ul class="nav-links"></ul></nav></header>
+    <main class="container">
+        <section class="page-header">
+            <h1 class="page-title">Frequently Asked Questions</h1>
+            <p class="page-subtitle">Quick answers to common questions about TaskFlow</p>
+        </section>
+        <div class="faq-item">
+            <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                Is TaskFlow free to use? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">Yes! Our Free plan includes up to 50 tasks and 2 projects. Upgrade to Pro for unlimited tasks and team features.</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                Can I use TaskFlow offline? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">Tasks are stored locally in your browser. Changes sync when you reconnect if you use the cloud API.</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                How do I invite team members? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">Go to the Team page and click "Invite Member". Enter their email and assign a role (Admin, Member, or Viewer).</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                Can I export my data? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">Yes. Visit Reports or Settings to export all tasks and projects as JSON or download PDF summaries.</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                What integrations are supported? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">We support Slack, Google Calendar, GitHub, Microsoft Teams, Trello, and a full REST API. See the Integrations page for details.</div>
+        </div>
+        <p style="text-align:center;margin-top:2rem;color:var(--muted);">Still have questions? <a href="contact.html" style="color:var(--primary);font-weight:600;">Contact us</a></p>
+    </main>
+    <footer class="site-footer"></footer>
+    <script src="layout.js"></script>
+</body>
+</html>

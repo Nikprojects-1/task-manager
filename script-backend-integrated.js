@@ -36,7 +36,24 @@ class TaskManager {
         return 'home';
     }
 
+    loadFromLocalStorage() {
+        try {
+            const tasks = localStorage.getItem('tasks');
+            const projects = localStorage.getItem('projects');
+            if (tasks) this.tasks = JSON.parse(tasks);
+            if (projects) this.projects = JSON.parse(projects);
+            this.updateStats();
+            this.updateHomePageStats();
+        } catch (e) {
+            console.error('Local storage load failed:', e);
+        }
+    }
+
     async loadInitialData() {
+        if (!window.taskFlowAPI) {
+            this.loadFromLocalStorage();
+            return;
+        }
         try {
             // Load user profile first
             const profileResponse = await taskFlowAPI.getProfile();
@@ -80,7 +97,7 @@ class TaskManager {
             }
         } catch (error) {
             console.error('Failed to load initial data:', error);
-            this.showToast('Failed to load data', 'error');
+            this.loadFromLocalStorage();
         }
     }
 
@@ -365,25 +382,30 @@ class TaskManager {
     }
 
     updateStats() {
+        const today = new Date().toISOString().split('T')[0];
         const total = this.tasks.length;
         const completed = this.tasks.filter(t => t.status === 'completed').length;
         const inProgress = this.tasks.filter(t => t.status === 'in-progress').length;
-        const overdue = this.tasks.filter(t => 
-            t.dueDate && new Date(t.dueDate) < new Date() && t.status !== 'completed'
+        const overdue = this.tasks.filter(t =>
+            t.dueDate && t.dueDate < today && t.status !== 'completed'
         ).length;
+        const todayCount = this.tasks.filter(t => t.dueDate === today).length;
 
-        // Update stat elements
         this.updateStatElement('total-tasks-count', total);
+        this.updateStatElement('total-tasks', total);
         this.updateStatElement('completed-tasks-count', completed);
+        this.updateStatElement('completed-tasks', completed);
         this.updateStatElement('progress-tasks-count', inProgress);
+        this.updateStatElement('in-progress-tasks', inProgress);
         this.updateStatElement('overdue-tasks-count', overdue);
+        this.updateStatElement('today-tasks', todayCount);
 
-        // Update progress bars
-        const totalProgress = total > 0 ? (completed / total) * 100 : 0;
-        this.updateProgressBar('total-progress', totalProgress);
-        this.updateProgressBar('completed-progress', totalProgress);
-        this.updateProgressBar('progress-progress', (inProgress / total) * 100);
-        this.updateProgressBar('overdue-progress', (overdue / total) * 100);
+        const totalSafe = total || 1;
+        this.updateProgressBar('completed-progress', (completed / totalSafe) * 100);
+        this.updateProgressBar('progress-progress', (inProgress / totalSafe) * 100);
+        this.updateProgressBar('today-progress', (todayCount / totalSafe) * 100);
+
+        return { total, completed, inProgress, overdue, today: todayCount, pending: total - completed };
     }
 
     updateStatElement(elementId, value) {
@@ -493,14 +515,47 @@ class TaskManager {
                 this.initializeHomePage();
                 break;
             case 'dashboard':
-                this.initializeDashboard();
+                if (typeof this.initializeDashboard === 'function') {
+                    this.initializeDashboard();
+                } else {
+                    this.updateHomePageStats();
+                }
                 break;
             case 'tasks':
-                this.initializeTasksPage();
+                if (typeof this.initializeTasksPage === 'function') {
+                    this.initializeTasksPage();
+                } else {
+                    this.renderTasks();
+                }
                 break;
             case 'projects':
-                this.initializeProjectsPage();
+                if (typeof this.initializeProjectsPage === 'function') {
+                    this.initializeProjectsPage();
+                }
                 break;
+            default:
+                break;
+        }
+    }
+
+    getFilteredTasks(filter = 'all') {
+        switch (filter) {
+            case 'completed':
+                return this.tasks.filter(t => t.status === 'completed');
+            case 'pending':
+                return this.tasks.filter(t => t.status === 'pending');
+            case 'in-progress':
+                return this.tasks.filter(t => t.status === 'in-progress');
+            case 'today': {
+                const today = new Date().toISOString().split('T')[0];
+                return this.tasks.filter(t => t.dueDate === today);
+            }
+            case 'overdue': {
+                const today = new Date().toISOString().split('T')[0];
+                return this.tasks.filter(t => t.dueDate < today && t.status !== 'completed');
+            }
+            default:
+                return this.tasks;
         }
     }
 

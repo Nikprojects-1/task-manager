@@ -453,6 +453,41 @@ class TaskManager {
 
         // Real-time collaboration indicators
         this.setupCollaborationIndicators();
+
+        const taskForm = document.getElementById('task-form');
+        if (taskForm) {
+            taskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleTaskSubmit();
+                realtime.emit('task:created', { task: this.getFormData() });
+            });
+        }
+
+        document.querySelectorAll('[data-filter]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const filter = e.currentTarget.dataset.filter;
+                this.currentFilter = filter;
+                this.renderTasks(filter);
+                this.updateActiveFilter(e.currentTarget);
+                realtime.emit('filter:changed', { filter });
+            });
+        });
+
+        document.querySelectorAll('.modal-close').forEach(button => {
+            button.addEventListener('click', () => {
+                this.closeModal();
+                realtime.emit('modal:closed', { modal: 'task' });
+            });
+        });
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeModal();
+                    realtime.emit('modal:closed', { modal: 'task' });
+                }
+            });
+        });
     }
 
     setupDragAndDrop() {
@@ -507,51 +542,6 @@ class TaskManager {
         });
     }
 
-    // Enhanced Task form submission
-    const taskForm = document.getElementById('task-form');
-    if (taskForm) {
-        taskForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleTaskSubmit();
-            // Emit real-time event
-            realtime.emit('task:created', { task: this.getFormData() });
-        });
-    }
-
-    // Filter buttons with real-time updates
-    const filterButtons = document.querySelectorAll('[data-filter]');
-    filterButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const filter = e.target.dataset.filter;
-            this.currentFilter = filter;
-            this.renderTasks(filter);
-            this.updateActiveFilter(e.target);
-            // Emit filter change event
-            realtime.emit('filter:changed', { filter });
-        });
-    });
-
-    // Modal close buttons
-    const modalCloseButtons = document.querySelectorAll('.modal-close');
-    modalCloseButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            this.closeModal();
-            realtime.emit('modal:closed', { modal: 'task' });
-        });
-    });
-
-    // Modal backdrop click with enhanced handling
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                this.closeModal();
-                realtime.emit('modal:closed', { modal: 'task' });
-            }
-        });
-    });
-
-    // Enhanced Task checkboxes with real-time updates
     attachTaskEventListeners() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach(checkbox => {
@@ -892,11 +882,6 @@ class TaskManager {
 }
 
 // Initialize the app
-let taskManager;
-
 document.addEventListener('DOMContentLoaded', () => {
-    taskManager = new TaskManager();
+    window.taskManager = new TaskManager();
 });
-
-// Export for global access
-window.taskManager = taskManager;

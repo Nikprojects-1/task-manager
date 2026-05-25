@@ -1,6 +1,7 @@
 class TaskFlowAPI {
     constructor() {
-        this.baseURL = process.env.API_BASE_URL || 'http://localhost:3000/api';
+        const config = typeof window !== 'undefined' && window.TASKFLOW_CONFIG;
+        this.baseURL = (config && config.apiBaseUrl) || 'http://localhost:3000/api';
         this.token = localStorage.getItem('taskflow_token');
     }
 
@@ -183,5 +184,10 @@ class TaskFlowAPI {
     }
 }
 
-// Create global API instance
-window.taskFlowAPI = new TaskFlowAPI();
+// Create global API instance (safe for browser)
+try {
+    window.taskFlowAPI = new TaskFlowAPI();
+} catch (e) {
+    console.warn('TaskFlow API client unavailable:', e);
+    window.taskFlowAPI = null;
+}

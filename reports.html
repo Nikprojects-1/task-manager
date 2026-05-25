@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - TaskFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header><nav class="container"><ul class="nav-links"></ul></nav></header>
+    <main class="container">
+        <section class="page-header">
+            <h1 class="page-title">Reports</h1>
+            <p class="page-subtitle">Export and review productivity insights across your workspace</p>
+        </section>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-file-export"></i></div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Reports generated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-check-double"></i></div>
+                <div class="stat-value">87%</div>
+                <div class="stat-label">Avg completion rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon amber"><i class="fas fa-clock"></i></div>
+                <div class="stat-value">142h</div>
+                <div class="stat-label">Time logged this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red"><i class="fas fa-calendar-xmark"></i></div>
+                <div class="stat-value">3</div>
+                <div class="stat-label">Overdue projects</div>
+            </div>
+        </div>
+        <div class="content-card">
+            <h2>Available reports</h2>
+            <div class="info-grid">
+                <div class="info-tile">
+                    <h3><i class="fas fa-chart-pie" style="color:var(--primary);"></i> Task Summary</h3>
+                    <p>Breakdown by status, priority, and assignee.</p>
+                    <button class="btn btn-outline btn-sm" style="margin-top:1rem;" onclick="alert('Report downloaded as PDF')">Download PDF</button>
+                </div>
+                <div class="info-tile">
+                    <h3><i class="fas fa-users" style="color:var(--secondary);"></i> Team Performance</h3>
+                    <p>Weekly productivity per team member.</p>
+                    <button class="btn btn-outline btn-sm" style="margin-top:1rem;" onclick="alert('Report downloaded as PDF')">Download PDF</button>
+                </div>
+                <div class="info-tile">
+                    <h3><i class="fas fa-hourglass-half" style="color:var(--warning);"></i> Time Audit</h3>
+                    <p>Hours tracked per project and task category.</p>
+                    <button class="btn btn-outline btn-sm" style="margin-top:1rem;" onclick="alert('Report downloaded as CSV')">Download CSV</button>
+                </div>
+                <div class="info-tile">
+                    <h3><i class="fas fa-database" style="color:var(--success);"></i> Full Export</h3>
+                    <p>Export all tasks and projects as JSON.</p>
+                    <button class="btn btn-primary btn-sm" style="margin-top:1rem;" onclick="alert('Full data export started')">Export JSON</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="site-footer"></footer>
+    <script src="script-enhanced.js"></script>
+    <script src="layout.js"></script>
+</body>
+</html>

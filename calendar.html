@@ -510,10 +510,11 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script-enhanced.js"></script>
     <script>
         // Calendar page specific functionality
         document.addEventListener('DOMContentLoaded', () => {
+            if (!window.taskManager) return;
             const calendarPage = {
                 currentDate: new Date(),
                 selectedDate: null,
@@ -851,5 +852,6 @@
             calendarPage.init();
         });
     </script>
+    <script src="layout.js"></script>
 </body>
 </html>

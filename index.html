@@ -12,8 +12,8 @@
     <style>
         /* ── Hero ── */
         .hero {
-            background: var(--gradient-hero);
-            border-radius: var(--border-radius-xl);
+            background: var(--grad-hero);
+            border-radius: var(--radius-xl);
             padding: 4rem 3rem;
             margin-bottom: 1.5rem;
             color: white;
@@ -75,7 +75,7 @@
             color: #4338ca;
             font-weight: 600;
             padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius);
             border: none;
             cursor: pointer;
             display: inline-flex;
@@ -91,7 +91,7 @@
             color: white;
             font-weight: 500;
             padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius);
             border: 1px solid rgba(255,255,255,0.2);
             cursor: pointer;
             display: inline-flex;
@@ -121,8 +121,8 @@
         }
         .kpi-card {
             background: white;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             padding: 1.25rem 1.5rem;
             box-shadow: var(--shadow-sm);
             transition: box-shadow 0.2s, transform 0.2s;
@@ -137,20 +137,20 @@
         .kpi-badge { font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 100px; }
         .kpi-badge.up   { background: #f0fdf4; color: #059669; }
         .kpi-badge.down { background: #fef2f2; color: #dc2626; }
-        .kpi-badge.neutral { background: var(--light-gray); color: var(--gray-color); }
-        .kpi-value { font-size: 1.875rem; font-weight: 700; color: var(--dark-color); letter-spacing: -1px; line-height: 1; margin-bottom: 0.25rem; }
-        .kpi-label { font-size: 0.8125rem; color: var(--gray-color); font-weight: 500; }
-        .kpi-progress { margin-top: 0.875rem; height: 4px; background: var(--light-gray); border-radius: 100px; overflow: hidden; }
+        .kpi-badge.neutral { background: var(--border-light); color: var(--muted); }
+        .kpi-value { font-size: 1.875rem; font-weight: 700; color: var(--text-heading); letter-spacing: -1px; line-height: 1; margin-bottom: 0.25rem; }
+        .kpi-label { font-size: 0.8125rem; color: var(--muted); font-weight: 500; }
+        .kpi-progress { margin-top: 0.875rem; height: 4px; background: var(--border-light); border-radius: 100px; overflow: hidden; }
         .kpi-progress-fill { height: 100%; border-radius: 100px; transition: width 0.6s ease; }
 
         /* ── Section label ── */
-        .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-color); margin-bottom: 0.5rem; }
+        .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; }
 
         /* ── Quick action cards ── */
         .action-card {
             background: white;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             padding: 1.25rem;
             box-shadow: var(--shadow-sm);
             transition: box-shadow 0.2s, transform 0.2s;
@@ -161,15 +161,15 @@
         }
         .action-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .action-card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; margin-bottom: 0.25rem; }
-        .action-card h3 { font-size: 0.9375rem; font-weight: 600; color: var(--dark-color); margin: 0; }
-        .action-card p { font-size: 0.8125rem; color: var(--gray-color); margin: 0; line-height: 1.5; }
+        .action-card h3 { font-size: 0.9375rem; font-weight: 600; color: var(--text-heading); margin: 0; }
+        .action-card p { font-size: 0.8125rem; color: var(--muted); margin: 0; line-height: 1.5; }
 
         /* ── Feature list ── */
-        .feature-item { display: flex; align-items: flex-start; gap: 0.875rem; padding: 0.875rem 0; border-bottom: 1px solid var(--border-color); }
+        .feature-item { display: flex; align-items: flex-start; gap: 0.875rem; padding: 0.875rem 0; border-bottom: 1px solid var(--border); }
         .feature-item:last-child { border-bottom: none; padding-bottom: 0; }
         .feature-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem; flex-shrink: 0; }
-        .feature-item h4 { font-size: 0.9rem; font-weight: 600; color: var(--dark-color); margin-bottom: 0.15rem; }
-        .feature-item p { font-size: 0.8125rem; color: var(--gray-color); margin: 0; line-height: 1.5; }
+        .feature-item h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-heading); margin-bottom: 0.15rem; }
+        .feature-item p { font-size: 0.8125rem; color: var(--muted); margin: 0; line-height: 1.5; }
 
         @media (max-width: 1024px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
@@ -220,15 +220,15 @@
                 </div>
                 <div class="hero-stats">
                     <div>
-                        <div class="hero-stat-value" id="hero-total">—</div>
+                        <div class="hero-stat-value" id="hero-total">0</div>
                         <div class="hero-stat-label">Total tasks</div>
                     </div>
                     <div>
-                        <div class="hero-stat-value" id="hero-done">—</div>
+                        <div class="hero-stat-value" id="hero-done">0</div>
                         <div class="hero-stat-label">Completed</div>
                     </div>
                     <div>
-                        <div class="hero-stat-value" id="hero-rate">—</div>
+                        <div class="hero-stat-value" id="hero-rate">0%</div>
                         <div class="hero-stat-label">Completion rate</div>
                     </div>
                 </div>
@@ -275,46 +275,21 @@
             </div>
         </div>
 
-        <!-- Recent Tasks + Quick Actions -->
-        <div class="grid grid-cols-3 fade-in" style="align-items:start;">
-            <div style="grid-column: span 2;">
-                <div class="card" style="margin-bottom:0;">
-                    <div class="card-header">
-                        <div>
-                            <div class="section-label">Overview</div>
-                            <h3 class="card-title" style="margin:0;">Recent Tasks</h3>
-                        </div>
-                        <a href="tasks.html" class="btn btn-outline btn-sm">View all <i class="fas fa-arrow-right"></i></a>
+        <!-- Recent Tasks -->
+        <div class="fade-in">
+            <div class="card" style="margin-bottom:0;">
+                <div class="card-header">
+                    <div>
+                        <div class="section-label">Overview</div>
+                        <h3 class="card-title" style="margin:0;">Recent Tasks</h3>
                     </div>
-                    <div class="card-body">
-                        <div id="recent-tasks-container">
-                            <p style="color:var(--gray-color); text-align:center; padding:2rem 0; font-size:0.9rem;">No tasks yet — create your first one above.</p>
-                        </div>
+                    <a href="tasks.html" class="btn btn-outline btn-sm">View all <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card-body">
+                    <div id="recent-tasks-container">
+                        <p style="color:var(--muted); text-align:center; padding:2rem 0; font-size:0.9rem;">No tasks yet — create your first one above.</p>
                     </div>
                 </div>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:0.875rem;">
-                <div class="section-label">Quick Access</div>
-                <a href="calendar.html" class="action-card">
-                    <div class="action-card-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fas fa-calendar-alt"></i></div>
-                    <h3>Calendar</h3>
-                    <p>View tasks by date and plan your schedule</p>
-                </a>
-                <a href="projects.html" class="action-card">
-                    <div class="action-card-icon" style="background:#f5f3ff; color:#7c3aed;"><i class="fas fa-project-diagram"></i></div>
-                    <h3>Projects</h3>
-                    <p>Organize tasks into focused project groups</p>
-                </a>
-                <a href="analytics.html" class="action-card">
-                    <div class="action-card-icon" style="background:#ecfdf5; color:#059669;"><i class="fas fa-chart-line"></i></div>
-                    <h3>Analytics</h3>
-                    <p>Track productivity trends and performance</p>
-                </a>
-                <a href="team.html" class="action-card">
-                    <div class="action-card-icon" style="background:#fff7ed; color:#ea580c;"><i class="fas fa-users"></i></div>
-                    <h3>Team</h3>
-                    <p>Collaborate and assign tasks to members</p>
-                </a>
             </div>
         </div>
 
@@ -411,7 +386,7 @@
                     <select name="project" id="project" class="form-control form-select"></select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Tags <span style="color:var(--gray-color); font-weight:400;">(comma-separated)</span></label>
+                    <label class="form-label">Tags <span style="color:var(--muted); font-weight:400;">(comma-separated)</span></label>
                     <input type="text" name="tags" class="form-control" placeholder="e.g. urgent, design, backend">
                 </div>
                 <div class="form-group" style="margin-bottom:0; display:flex; gap:0.75rem;">
@@ -469,7 +444,7 @@
             <div class="footer-bottom">
                 <div class="footer-bottom-left">
                     <p>&copy; 2026 TaskFlow. All rights reserved.</p>
-                    <span class="footer-version">v2.0.1 &bull; <a href="#">Privacy Policy</a> &bull; <a href="#">Terms of Service</a></span>
+                    <span class="footer-version">v2.1.0 &bull; <a href="privacy.html">Privacy Policy</a> &bull; <a href="terms.html">Terms of Service</a></span>
                 </div>
                 <div class="footer-bottom-right">
                     <p>Made with <i class="fas fa-heart"></i> by TaskFlow Team</p>
@@ -478,28 +453,7 @@
         </div>
     </footer>
 
-    <script src="api-client.js"></script>
     <script src="script-enhanced.js"></script>
-    <script>
-        const taskManager = new TaskManager();
-
-        // Populate hero stats after init
-        document.addEventListener('DOMContentLoaded', () => {
-            const stats = taskManager.updateStats ? taskManager.updateStats() : {};
-            const total = stats.total || taskManager.tasks?.length || 0;
-            const completed = stats.completed || 0;
-            const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-            const heroTotal = document.getElementById('hero-total');
-            const heroDone  = document.getElementById('hero-done');
-            const heroRate  = document.getElementById('hero-rate');
-            const compBadge = document.getElementById('completed-badge');
-
-            if (heroTotal) heroTotal.textContent = total;
-            if (heroDone)  heroDone.textContent  = completed;
-            if (heroRate)  heroRate.textContent  = rate + '%';
-            if (compBadge) compBadge.textContent = rate + '%';
-        });
-    </script>
+    <script src="layout.js"></script>
 </body>
 </html>

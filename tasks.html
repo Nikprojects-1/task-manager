@@ -298,11 +298,11 @@
         </div>
     </footer>
 
-    <script src="api-client.js"></script>
-    <script src="script-backend-integrated.js"></script>
+    <script src="script-enhanced.js"></script>
     <script>
         // Tasks page specific functionality
         document.addEventListener('DOMContentLoaded', () => {
+            if (!window.taskManager) return;
             const tasksPage = {
                 currentFilter: 'all',
                 selectedTasks: new Set(),
@@ -572,5 +572,6 @@
             tasksPage.init();
         });
     </script>
+    <script src="layout.js"></script>
 </body>
 </html>
